@@ -1,12 +1,19 @@
 import NavBar from "./components/navbar";
 import Game from "./pages/game";
+import styled from "styled-components";
+
+const Main = styled.main`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
 
 const App = () => {
   return (
-    <main>
+    <Main>
       <NavBar />
       <Game />
-    </main>
+    </Main>
   );
 };
 
