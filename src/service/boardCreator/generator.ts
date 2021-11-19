@@ -15,9 +15,7 @@ const generator = (name: string) => {
     .map(() => Array.from({ length: 10 }, (_, i) => i + 1));
 
   for (let i = 1; i <= GRID_SIZE; i++) {
-    if (~~((i - 1) % 10) === 0) {
-      placeText++;
-    }
+    if (~~((i - 1) % 10) === 0) placeText++;
 
     if (dark) {
       index++;
