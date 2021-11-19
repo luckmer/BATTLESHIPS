@@ -2,17 +2,17 @@ import { useEffect, useState, useMemo } from "react";
 import { shipInterface } from "./interface";
 import { shipTypes } from "./index";
 
-const ShipPanel = (name: string) => {
+const ShipPanel = () => {
   const [ship, setShip] = useState<shipInterface[]>([]);
 
   useEffect(() => {
     const map: shipInterface[] = shipTypes;
     setShip(map);
-  }, [name]);
+  }, []);
 
-  const boardData = useMemo(() => ship, [ship]);
+  const shipData = useMemo(() => ship, [ship]);
 
-  return boardData;
+  return { shipData };
 };
 
 export default ShipPanel;
