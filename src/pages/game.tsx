@@ -5,19 +5,31 @@ const Game = () => {
   const player = GenerateBoard("player");
   const enemy = GenerateBoard("enemy");
 
+  const btns = ["start game", "rotate"];
+
   return (
     <Section>
-      <Div>
-        {player.map(({ id }: { id: number }) => (
-          <Grid key={id}></Grid>
-        ))}
-      </Div>
+      <Rotate>
+        <Div>
+          {player.map(({ id }: { id: number }) => (
+            <Grid key={id}></Grid>
+          ))}
+        </Div>
 
-      <Div>
-        {enemy.map(({ id }: { id: number }) => (
-          <Grid key={id}></Grid>
+        <Div>
+          {enemy.map(({ id }: { id: number }) => (
+            <Grid key={id}></Grid>
+          ))}
+        </Div>
+      </Rotate>
+      <ButtonPanel>
+        {btns.map((el: string) => (
+          <div key={el}>
+            <button name={el}>{el}</button>
+          </div>
         ))}
-      </Div>
+      </ButtonPanel>
+      <Footer>boats!</Footer>
     </Section>
   );
 };
@@ -40,9 +52,22 @@ const Grid = styled.div`
   }
 `;
 
+const Rotate = styled.div`
+  display: flex;
+`;
+
+const ButtonPanel = styled.div`
+  margin: 2vmin;
+`;
+
 const Section = styled.section`
   display: flex;
+  flex-direction: column;
   justify-content: space-evenly;
   max-width: 1800px;
-  margin: auto;
+  margin: 0 auto;
+`;
+
+const Footer = styled.footer`
+  margin: 2vmin;
 `;
