@@ -19,8 +19,8 @@ const Game = () => {
   const [rotateStatus, setRotateStatus] = useState(false);
   const [uniqueShipKey, setUniqueShipKey] = useState(0);
   const [dragged, setDragged] = useState(false);
-  const player = GenerateBoard("player");
-  const enemy = GenerateBoard("enemy");
+  const player = GenerateBoard("player").boardData;
+  const enemy = GenerateBoard("enemy").boardData;
   const { shipData } = ShipPanel();
 
   const handleRotateShip = (
@@ -81,11 +81,20 @@ const Game = () => {
 
     if (!ship) return;
 
-    const shipGrid = new Array(ship.size)
-      .fill(1)
-      .map((el, i): number => el + i);
+    const shipGrid = new Array(ship.size).fill(1).map((el, i): number => {
+      const id = el + i;
 
-    console.log(ID, shipID, shipGrid);
+      return id;
+    });
+
+    const firstHalf = [...shipGrid].slice(0, shipID - 1).map((el) => ID - el);
+
+    const secondHalf = [...shipGrid].slice(shipID - 1).map((_, i) => {
+      return i === 0 ? ID : ID + i;
+    });
+
+    const boatLocation = [...firstHalf, ...secondHalf].sort((a, b) => a - b);
+    console.log(boatLocation);
   };
 
   const handleSetupShipNumber = (el: number) => {

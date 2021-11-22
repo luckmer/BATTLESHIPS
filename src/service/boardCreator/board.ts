@@ -14,7 +14,7 @@ const GenerateBoard = (name: string) => {
 
   const boardData = useMemo(() => board, [board]);
 
-  return boardData;
+  return { boardData, setBoard };
 };
 
 export default GenerateBoard;
