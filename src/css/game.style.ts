@@ -3,16 +3,19 @@ import { Props } from "../pages/interface/index";
 
 export const Ship = styled.div<Props>`
   display: flex;
-  flex-wrap: wrap;
   margin: 1vmin;
-  width: ${({ size }) => `calc(4.6vmin * ${size} )`};
+  width: ${({ size }) => `calc(4.6vmin * ${size})`};
   height: calc(4.6vmin * 1);
   border-radius: 2.3vmin;
-  background: grey;
+  background: ${({ setupColor }) => `${setupColor ? "orange" : "grey"} `};
   transition: 0.3s linear;
 
-  &:hover {
-    background: orange;
+  cursor: pointer;
+
+  div {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
   }
 `;
 
@@ -23,8 +26,10 @@ export const ShipContainer = styled.div`
   flex-flow: row wrap;
 `;
 
-export const ShipGrid = styled.div`
+export const ShipGrid = styled.div<any>`
   display: flex;
+  transform: rotate(${({ status }) => (status ? "90deg" : "0deg")});
+  z-index: 999;
 `;
 
 export const Div = styled.div`
@@ -57,5 +62,5 @@ export const Section = styled.section`
 `;
 
 export const Footer = styled.footer`
-  margin: 2vmin;
+  margin: 8vmin;
 `;
