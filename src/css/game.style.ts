@@ -40,9 +40,12 @@ export const Div = styled.div`
   grid-template-columns: repeat(10, 4.6vmin);
 `;
 
-export const Grid = styled.div`
+export const Grid = styled.div<{ boat: string | boolean | undefined }>`
   border: 1px solid hsla(0, 0%, 100%, 0.2);
   transition: all 0.2s;
+
+  background-color: ${({ boat }) => (boat ? "grey" : "")};
+
   &:hover {
     background-color: #0868cf;
   }
