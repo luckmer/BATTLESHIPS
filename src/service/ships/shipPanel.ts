@@ -12,7 +12,7 @@ const ShipPanel = () => {
 
   const shipData = useMemo(() => ship, [ship]);
 
-  return { shipData };
+  return { shipData, setShip };
 };
 
 export default ShipPanel;
