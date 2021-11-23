@@ -8,7 +8,6 @@ const GenerateBoard = (name: string) => {
 
   useEffect(() => {
     const map: mapInterface[] = generator(name);
-
     setBoard(map);
   }, [name]);
 
