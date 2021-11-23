@@ -3,10 +3,8 @@ import GenerateBoard from "../service/boardCreator/board";
 
 import ShipPanel from "../service/ships/shipPanel";
 import { boardsInterface } from "./interface";
-import { GRID_SIZE, START } from "../service/constants";
 import { mapInterface } from "../service/boardCreator/interface";
-import { shipInterface } from "../service/ships/interface";
-
+import shipFunctions from "../service/ships/shipFunctions";
 import {
   Section,
   Rotate,
@@ -33,9 +31,9 @@ const Game = () => {
     response: ""
   });
 
-  const player = GenerateBoard("player").boardData;
+  const { boardData, setBoard } = GenerateBoard("player");
   const enemy = GenerateBoard("enemy").boardData;
-  const { shipData } = ShipPanel();
+  const { shipData, setShip } = ShipPanel();
 
   const handleRotateShip = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -47,6 +45,71 @@ const Game = () => {
     if (rotateShip.includes(id)) {
       setRotateShip(rotateShip.filter((value: string) => value !== id));
     } else setRotateShip((prev: string[]) => prev.concat(id));
+  };
+
+  const handleDragShip = (e: React.DragEvent<HTMLDivElement>) =>
+    e.preventDefault();
+
+  const handleDragStartShip = (e: React.DragEvent<HTMLDivElement>) => {
+    const target = (e.target as HTMLDivElement).id;
+    e.dataTransfer.setData("id", target);
+    setDragged(true);
+  };
+
+  const handleDropShip = (e: React.DragEvent<HTMLDivElement>) => {
+    setDragged(false);
+  };
+
+  const handleDragOverPlayer = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const handleDropPlayer = (e: React.DragEvent<HTMLDivElement>) => {
+    const { shipPanel, ShipCollisionBlocker, BlockShip } = shipFunctions;
+    const target = e.target as HTMLDivElement;
+    const droppedShip = e.dataTransfer.getData("id");
+    const ID = Number(target.id);
+    const shipID = uniqueShipKey;
+
+    setDragged(false);
+
+    let ship = shipData!.find(
+      ({ name }: { name: string }) => name === droppedShip
+    );
+
+    if (!ship) return;
+
+    const shipLocation = shipPanel(ship, shipID, ID, rotateShip, rotateStatus);
+
+    const shipBlocker = BlockShip(shipLocation, boardData);
+
+    setMoveStatus({
+      status: true,
+      response: shipBlocker
+        ? "success"
+        : "you couldn't put the boat in the water"
+    });
+
+    if (!shipBlocker) return;
+
+    const update = Response(boardData, shipLocation);
+
+    setBoard(update);
+
+    const alreadyInUse = ShipCollisionBlocker(boardData, shipLocation);
+
+    if (alreadyInUse) return;
+
+    const deleteShip = shipData.filter((el) => el.name !== ship!.name);
+    const clearRotate = rotateShip.filter((name) => name !== ship!.name);
+
+    setRotateShip(clearRotate);
+    setShip(deleteShip);
+  };
+
+  const handleSetupShipNumber = (el: number) => {
+    if (dragged) return;
+    setUniqueShipKey(el);
   };
 
   useEffect(() => {
@@ -64,52 +127,6 @@ const Game = () => {
     return () => document.body.removeEventListener("keypress", keyPress);
   }, [rotateShip, rotateStatus]);
 
-  const handleDragShip = (e: React.DragEvent<HTMLDivElement>) =>
-    e.preventDefault();
-
-  const handleDragStartShip = (e: React.DragEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLDivElement;
-    const targetId = target.id;
-    e.dataTransfer.setData("id", targetId);
-    setDragged(true);
-  };
-
-  const handleDropShip = (e: React.DragEvent<HTMLDivElement>) => {
-    setDragged(false);
-  };
-
-  const handleDragOverPlayer = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
-  const handleDropPlayer = (e: React.DragEvent<HTMLDivElement>, id: number) => {
-    const target = e.target as HTMLDivElement;
-    const droppedShip = e.dataTransfer.getData("id");
-    const ID = Number(target.id);
-    const shipID = uniqueShipKey;
-
-    setDragged(false);
-    let ship = shipData!.find(
-      ({ name }: { name: string }) => name === droppedShip
-    );
-
-    if (!ship) return;
-
-    const shipBlocker = BlockShip(ship, shipID, ID, player);
-
-    setMoveStatus({
-      status: true,
-      response: shipBlocker
-        ? "success"
-        : "you couldn't put the boat in the water"
-    });
-  };
-
-  const handleSetupShipNumber = (el: number) => {
-    if (dragged) return;
-    setUniqueShipKey(el);
-  };
-
   useEffect(() => {
     if (moveStatus.response) {
       setTimeout(() => {
@@ -118,24 +135,25 @@ const Game = () => {
     }
   }, [moveStatus]);
 
-  console.log(moveStatus);
-
   return (
     <Section>
       <Rotate>
         <Div>
-          {player.map(({ id }: { id: number }, i: any) => (
-            <Grid
-              id={i + 1}
-              key={id}
-              onDragOver={(e) => handleDragOverPlayer(e)}
-              onDrop={(e) => handleDropPlayer(e, id)}
-            ></Grid>
-          ))}
+          {boardData.map(
+            ({ id, used }: { id: number; used: string | boolean }, i: any) => (
+              <Grid
+                id={i + 1}
+                key={id}
+                onDragOver={(e) => handleDragOverPlayer(e)}
+                onDrop={(e) => handleDropPlayer(e)}
+                boat={used}
+              ></Grid>
+            )
+          )}
         </Div>
         <Div>
           {enemy.map(({ id }: { id: number }) => (
-            <Grid key={id} />
+            <Grid key={id} boat={undefined} />
           ))}
         </Div>
       </Rotate>
@@ -181,42 +199,17 @@ const Game = () => {
 
 export default Game;
 
-const BlockShip = (
-  ship: shipInterface,
-  shipID: number,
-  ID: number,
-  player: mapInterface[]
-) => {
-  const shipGrid = new Array(ship.size).fill(1).map((el, i): number => el + i);
+const Response = (boardData: mapInterface[], shipLocation: number[]) => {
+  return boardData.map((el) => {
+    const id = Number(el.id);
 
-  const firstHalf = [...shipGrid].slice(0, shipID - 1).map((el) => ID - el);
+    if (shipLocation.includes(id)) {
+      const usedPanel = boardData.filter((el) => shipLocation.includes(el.id));
 
-  const secondHalf = [...shipGrid]
-    .slice(shipID - 1)
-    .map((_, i) => (i === 0 ? ID : ID + i));
+      const usedTester = usedPanel.some(({ used }) => used === true);
 
-  const boatLocation = [...firstHalf, ...secondHalf].sort((a, b) => a - b);
-
-  const rightWall = player
-    .filter(({ id }: { id: number }) => id % 10 === 0)
-    .map(({ id }) => id);
-
-  const leftWall = player
-    .filter(({ id }: { id: number }) => id % 10 === 1)
-    .map(({ id }) => id);
-
-  const checkLeftWall = leftWall.filter((el) => boatLocation.includes(el));
-  const checkRightWall = rightWall.filter((el) => boatLocation.includes(el));
-
-  const maxExceeded = boatLocation.filter((el) => el > GRID_SIZE);
-  const limitExceeded = boatLocation.filter((el) => el < START);
-
-  if (
-    (checkLeftWall.length && checkRightWall.length) ||
-    maxExceeded.length ||
-    limitExceeded.length
-  ) {
-    return false;
-  }
-  return true;
+      if (!usedTester) return { ...el, used: true };
+    }
+    return el;
+  });
 };
