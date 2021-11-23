@@ -35,7 +35,7 @@ const generator = (name: string) => {
     const location =
       number[i][index - 1] === undefined ? 10 : number[i][index - 1];
 
-    const grid = { id: i, _id: i, name, placer, location };
+    const grid = { id: i, name, placer, location, used: false };
 
     map.push(grid);
   }
