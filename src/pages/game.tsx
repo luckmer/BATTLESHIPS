@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import GenerateBoard from "../service/boardCreator/board";
 
-import ShipPanel from "../service/ships/shipPanel";
-import { boardsInterface } from "./interface";
-import { mapInterface } from "../service/boardCreator/interface";
 import shipFunctions from "../service/ships/shipFunctions";
+import GenerateBoard from "../service/boardCreator/board";
+import ShipPanel from "../service/ships/shipPanel";
+import ComputerGame from "./computer/computerGame";
+
+import { mapInterface } from "../service/boardCreator/interface";
+import { boardsInterface } from "./interface";
+
 import {
   Section,
   Rotate,
@@ -24,15 +27,17 @@ interface ObjInterface {
 const Game = () => {
   const [rotateShip, setRotateShip] = useState<string[]>([]);
   const [rotateStatus, setRotateStatus] = useState(false);
+  const [test, setTest] = useState<any[][]>([]);
   const [uniqueShipKey, setUniqueShipKey] = useState(0);
+  const [player, setPlayer] = useState<string>("user");
   const [dragged, setDragged] = useState(false);
+
   const [moveStatus, setMoveStatus] = useState<ObjInterface>({
     status: false,
     response: ""
   });
 
   const { boardData, setBoard } = GenerateBoard("player");
-  const enemy = GenerateBoard("enemy").boardData;
   const { shipData, setShip } = ShipPanel();
 
   const handleRotateShip = (
@@ -46,24 +51,20 @@ const Game = () => {
       setRotateShip(rotateShip.filter((value: string) => value !== id));
     } else setRotateShip((prev: string[]) => prev.concat(id));
   };
-
-  const handleDragShip = (e: React.DragEvent<HTMLDivElement>) =>
+  const handleDragShip = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-
+  };
   const handleDragStartShip = (e: React.DragEvent<HTMLDivElement>) => {
     const target = (e.target as HTMLDivElement).id;
     e.dataTransfer.setData("id", target);
     setDragged(true);
   };
-
   const handleDropShip = (e: React.DragEvent<HTMLDivElement>) => {
     setDragged(false);
   };
-
   const handleDragOverPlayer = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
-
   const handleDropPlayer = (e: React.DragEvent<HTMLDivElement>) => {
     const { shipPanel, ShipCollisionBlocker, BlockShip } = shipFunctions;
     const target = e.target as HTMLDivElement;
@@ -106,7 +107,6 @@ const Game = () => {
     setRotateShip(clearRotate);
     setShip(deleteShip);
   };
-
   const handleSetupShipNumber = (el: number) => {
     if (dragged) return;
     setUniqueShipKey(el);
@@ -140,22 +140,18 @@ const Game = () => {
       <Rotate>
         <Div>
           {boardData.map(
-            ({ id, used }: { id: number; used: string | boolean }, i: any) => (
+            ({ id, used }: { id: number; used: string | boolean }, i) => (
               <Grid
-                id={i + 1}
+                id={String(i + 1)}
                 key={id}
                 onDragOver={(e) => handleDragOverPlayer(e)}
                 onDrop={(e) => handleDropPlayer(e)}
                 boat={used}
-              ></Grid>
+              />
             )
           )}
         </Div>
-        <Div>
-          {enemy.map(({ id }: { id: number }) => (
-            <Grid key={id} boat={undefined} />
-          ))}
-        </Div>
+        <ComputerGame shipData={shipData} />
       </Rotate>
       <Footer>
         <ShipContainer>
