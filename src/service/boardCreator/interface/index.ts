@@ -4,4 +4,5 @@ export interface mapInterface {
   placer: string;
   location: number;
   used: boolean;
+  enemyUsed: boolean;
 }
