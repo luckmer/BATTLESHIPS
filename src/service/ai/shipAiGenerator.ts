@@ -1,5 +1,5 @@
-import { shipInterface } from "../../service/ships/interface/index";
-import { BOARD_SIZE } from "../../service/constants/index";
+import { shipInterface } from "../ships/interface/index";
+import { BOARD_SIZE } from "../constants/index";
 
 class AiShipGenerator {
   generateShip = (size: number) => {

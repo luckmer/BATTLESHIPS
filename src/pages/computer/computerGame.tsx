@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Div, Grid } from "../../css/game.style";
 import GenerateBoard from "../../service/boardCreator/board";
 import { shipInterface } from "../../service/ships/interface";
-import shipAiGenerator from "./shipAiGenerator";
+import shipAiGenerator from "../../service/ai/shipAiGenerator";
 
 interface propsInterface {
   shipData: shipInterface[];
