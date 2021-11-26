@@ -11,7 +11,7 @@ import {
 const initialState = {
   rotateShip: [],
   dragged: false,
-  status: false,
+  buttonStatus: false,
   rotateStatus: false,
   uniqueShipKey: 0,
   moveStatus: {
@@ -29,10 +29,10 @@ const AppContext = createContext<{
 });
 
 const reducer = (state: InitialStateType, action: any) => ({
-  status: gameDisplayPanel(action),
-  moveStatus: moveStatusPanel(action),
-  rotateShip: rotateShipPanel(action),
-  rotateStatus: rotatePanel(action),
+  buttonStatus: gameDisplayPanel(state, action),
+  moveStatus: moveStatusPanel(state, action),
+  rotateShip: rotateShipPanel(state, action),
+  rotateStatus: rotatePanel(state, action),
   uniqueShipKey: shipKey()
 });
 

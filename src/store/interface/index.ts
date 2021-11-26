@@ -27,12 +27,16 @@ type typesPayload = {
   [Types.Rotate_on]: Status;
   [Types.Drag_off]: Status;
   [Types.Drag_on]: Status;
-  [Types.Off]: Status;
-  [Types.On]: Status;
+  [Types.Off]: {
+    buttonStatus: boolean;
+  };
+  [Types.On]: {
+    buttonStatus: boolean;
+  };
 };
 
 export type InitialStateType = {
-  status: boolean;
+  buttonStatus: boolean;
   moveStatus: {
     status: boolean;
     response: string;

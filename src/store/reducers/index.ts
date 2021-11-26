@@ -1,48 +1,61 @@
+import { InitialStateType } from "../interface/index";
 import { actionsPayload } from "../interface";
 import { Types } from "../types";
 
-export const moveStatusPanel = (action: actionsPayload) => {
+export const moveStatusPanel = (
+  state: InitialStateType,
+  action: actionsPayload
+) => {
   switch (action.type) {
     case Types.Correct_status:
       return {
-        status: action.payload.status,
+        status: true,
         response: action.payload.response
       };
 
     case Types.Incorrect_status:
       return {
-        status: action.payload.status,
+        status: false,
         response: action.payload.response
       };
 
     default:
-      return { status: false, response: "" };
+      return state.moveStatus;
   }
 };
 
-export const rotateShipPanel = (action: actionsPayload) => {
-  return [];
+export const rotateShipPanel = (
+  state: InitialStateType,
+  action: actionsPayload
+) => {
+  return state.rotateShip;
 };
 
-export const rotatePanel = (action: actionsPayload) => {
+export const rotatePanel = (
+  state: InitialStateType,
+  action: actionsPayload
+) => {
   switch (action.type) {
     case Types.Rotate_on:
       return action.payload.status;
     case Types.Rotate_off:
       return action.payload.status;
     default:
-      return false;
+      return state.rotateStatus;
   }
 };
 
-export const gameDisplayPanel = (action: actionsPayload) => {
+export const gameDisplayPanel = (
+  state: InitialStateType,
+  action: actionsPayload
+) => {
   switch (action.type) {
     case Types.On:
-      return true;
+      return false;
     case Types.Off:
-      return false;
+      return true;
     default:
-      return false;
+      return state.buttonStatus;
   }
 };
 

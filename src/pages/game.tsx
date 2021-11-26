@@ -142,10 +142,11 @@ const Game = () => {
   }, [rotateShip, rotateStatus, dispatch, state.rotateStatus]);
 
   useEffect(() => {
+    console.log(state.moveStatus);
     if (state.moveStatus.response) {
       setTimeout(() => {
         dispatch({
-          type: Types.Correct_status,
+          type: Types.Incorrect_status,
           payload: { status: false, response: "" }
         });
       }, 2000);
@@ -153,13 +154,17 @@ const Game = () => {
   }, [state, dispatch]);
 
   useEffect(() => {
-    dispatch({
-      type: shipData.length ? Types.Off : Types.On,
-      payload: {
-        status: shipData.length ? false : true
-      }
-    });
-  }, [shipData, dispatch]);
+    const allShipsInOnePlace = boardData
+      .map(({ used }: { used: boolean }) => used)
+      .filter((el) => el).length;
+
+    if (allShipsInOnePlace === 20) {
+      dispatch({ type: Types.Off, payload: { buttonStatus: true } });
+      return;
+    } else {
+      dispatch({ type: Types.On, payload: { buttonStatus: false } });
+    }
+  }, [shipData, dispatch, boardData]);
 
   const generateEnemy = Enemy(shipsData, enemyBoardData, setEnemyBoard);
 
@@ -191,7 +196,7 @@ const Game = () => {
       </Rotate>
       <Footer>
         <ShipContainer>
-          {state.status ? (
+          {state.buttonStatus ? (
             <GameDiv>
               <GameButton>
                 <Button onClick={handleStartGame}>Start Game</Button>
