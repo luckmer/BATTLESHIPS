@@ -1,6 +1,9 @@
+import { useContext } from "react";
+
 import NavBar from "./components/navbar";
 import Game from "./pages/game";
 import styled from "styled-components";
+import { AppContext } from "./data/store";
 
 const Main = styled.main`
   display: flex;
@@ -9,6 +12,8 @@ const Main = styled.main`
 `;
 
 const App = () => {
+  const store = useContext(AppContext);
+
   return (
     <Main>
       <NavBar />

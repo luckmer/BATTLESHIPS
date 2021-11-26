@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import shipFunctions from "../service/ships/shipFunctions";
 import GenerateBoard from "../service/boardCreator/board";
@@ -7,7 +7,14 @@ import ComputerGame from "./computer/computerGame";
 
 import { mapInterface } from "../service/boardCreator/interface";
 import { boardsInterface } from "./interface";
+import shipAiGenerator from "../service/ai/shipAiGenerator";
 
+import styled from "styled-components";
+
+import GenerateEnemyBoard from "../service/boardCreator/enemyBoard";
+import { shipInterface } from "../service/ships/interface";
+import { AppContext } from "../data/store";
+import { Types } from "../data/types/index";
 import {
   Section,
   Rotate,
@@ -19,26 +26,16 @@ import {
   Ship
 } from "../css/game.style";
 
-interface ObjInterface {
-  status: boolean;
-  response: string;
-}
-
 const Game = () => {
   const [rotateShip, setRotateShip] = useState<string[]>([]);
-  const [rotateStatus, setRotateStatus] = useState(false);
-  const [test, setTest] = useState<any[][]>([]);
   const [uniqueShipKey, setUniqueShipKey] = useState(0);
-  const [player, setPlayer] = useState<string>("user");
   const [dragged, setDragged] = useState(false);
 
-  const [moveStatus, setMoveStatus] = useState<ObjInterface>({
-    status: false,
-    response: ""
-  });
-
+  const { state, dispatch } = useContext(AppContext);
+  const { enemyBoardData, setEnemyBoard } = GenerateEnemyBoard("enemy");
   const { boardData, setBoard } = GenerateBoard("player");
-  const { shipData, setShip } = ShipPanel();
+  const { shipData, shipsData, setShip } = ShipPanel();
+  const rotateStatus = state.rotateStatus;
 
   const handleRotateShip = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -51,20 +48,21 @@ const Game = () => {
       setRotateShip(rotateShip.filter((value: string) => value !== id));
     } else setRotateShip((prev: string[]) => prev.concat(id));
   };
-  const handleDragShip = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
+
   const handleDragStartShip = (e: React.DragEvent<HTMLDivElement>) => {
     const target = (e.target as HTMLDivElement).id;
     e.dataTransfer.setData("id", target);
     setDragged(true);
   };
+
   const handleDropShip = (e: React.DragEvent<HTMLDivElement>) => {
     setDragged(false);
   };
-  const handleDragOverPlayer = (e: React.DragEvent<HTMLDivElement>) => {
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
+
   const handleDropPlayer = (e: React.DragEvent<HTMLDivElement>) => {
     const { shipPanel, ShipCollisionBlocker, BlockShip } = shipFunctions;
     const target = e.target as HTMLDivElement;
@@ -84,11 +82,14 @@ const Game = () => {
 
     const shipBlocker = BlockShip(shipLocation, boardData);
 
-    setMoveStatus({
-      status: true,
-      response: shipBlocker
-        ? "success"
-        : "you couldn't put the boat in the water"
+    dispatch({
+      type: Types.Incorrect_status,
+      payload: {
+        status: true,
+        response: shipBlocker
+          ? "success"
+          : "you couldn't put the boat in the water"
+      }
     });
 
     if (!shipBlocker) return;
@@ -107,33 +108,68 @@ const Game = () => {
     setRotateShip(clearRotate);
     setShip(deleteShip);
   };
-  const handleSetupShipNumber = (el: number) => {
+
+  const handleMouseOver = (el: number) => {
     if (dragged) return;
     setUniqueShipKey(el);
   };
 
   useEffect(() => {
     if (!rotateShip.length) {
-      setRotateStatus(false);
+      dispatch({ type: Types.Rotate_off, payload: { status: false } });
       return;
     }
 
     const keyPress = (e: KeyboardEvent) => {
-      if (e.key === "r" && rotateShip.length) setRotateStatus(!rotateStatus);
+      if (e.key === "r" && rotateShip.length) {
+        let value = state.rotateStatus;
+
+        dispatch({
+          type:
+            e.key === "r" && rotateShip.length
+              ? Types.Rotate_on
+              : Types.Rotate_off,
+          payload: {
+            status: (value = value ? false : true)
+          }
+        });
+      }
     };
 
     document.body.addEventListener("keypress", keyPress);
 
     return () => document.body.removeEventListener("keypress", keyPress);
-  }, [rotateShip, rotateStatus]);
+  }, [rotateShip, rotateStatus, dispatch, state.rotateStatus]);
 
   useEffect(() => {
-    if (moveStatus.response) {
+    if (state.moveStatus.response) {
       setTimeout(() => {
-        setMoveStatus({ status: false, response: "" });
-      }, 1500);
+        dispatch({
+          type: Types.Correct_status,
+          payload: { status: false, response: "" }
+        });
+      }, 2000);
     }
-  }, [moveStatus]);
+  }, [state, dispatch]);
+
+  useEffect(() => {
+    dispatch({
+      type: shipData.length ? Types.Off : Types.On,
+      payload: {
+        status: shipData.length ? false : true
+      }
+    });
+  }, [shipData, dispatch]);
+
+  const generateEnemy = Enemy(shipsData, enemyBoardData, setEnemyBoard);
+
+  const handleRestartGame = () => {};
+
+  const handleStartGame = () => {
+    generateEnemy();
+  };
+
+  const enemyShips = enemyBoardData;
 
   return (
     <Section>
@@ -144,49 +180,62 @@ const Game = () => {
               <Grid
                 id={String(i + 1)}
                 key={id}
-                onDragOver={(e) => handleDragOverPlayer(e)}
+                onDragOver={(e) => handleDragOver(e)}
                 onDrop={(e) => handleDropPlayer(e)}
                 boat={used}
               />
             )
           )}
         </Div>
-        <ComputerGame shipData={shipData} />
+        <ComputerGame shipData={enemyShips} />
       </Rotate>
       <Footer>
         <ShipContainer>
-          {shipData.map(({ id, size, name }: boardsInterface) => {
-            const findShip = rotateShip.some((el: string) => el === name);
-            const rotateBlocker = rotateStatus && findShip;
+          {state.status ? (
+            <GameDiv>
+              <GameButton>
+                <Button onClick={handleStartGame}>Start Game</Button>
+              </GameButton>
+              <GameButton>
+                <Button onClick={handleRestartGame}>Restart</Button>
+              </GameButton>
+            </GameDiv>
+          ) : (
+            shipData.map(({ id, size, name }: boardsInterface) => {
+              const findShip = rotateShip.some((el: string) => el === name);
+              const rotateBlocker = rotateStatus && findShip;
 
-            const shipBlocks = new Array(size).fill(1).map((el: number, i) => {
-              return { name: name, id: el + i };
-            });
+              const shipBlocks = new Array(size)
+                .fill(1)
+                .map((el: number, i) => {
+                  return { name: name, id: el + i };
+                });
 
-            return (
-              <ShipGrid status={rotateBlocker} key={id}>
-                <Ship
-                  draggable
-                  onDragOver={(e) => handleDragShip(e)}
-                  onDragStart={(e) => handleDragStartShip(e)}
-                  onDrop={(e) => handleDropShip(e)}
-                  size={size}
-                  status={rotateBlocker}
-                  setupColor={findShip}
-                  id={name}
-                >
-                  {shipBlocks.map((data: { name: string; id: number }) => (
-                    <div
-                      key={data.id}
-                      onClick={(e) => handleRotateShip(e)}
-                      id={String(data.name)}
-                      onMouseOver={() => handleSetupShipNumber(data.id)}
-                    />
-                  ))}
-                </Ship>
-              </ShipGrid>
-            );
-          })}
+              return (
+                <ShipGrid status={rotateBlocker} key={id}>
+                  <Ship
+                    draggable
+                    onDragOver={(e) => handleDragOver(e)}
+                    onDragStart={(e) => handleDragStartShip(e)}
+                    onDrop={(e) => handleDropShip(e)}
+                    size={size}
+                    status={rotateBlocker}
+                    setupColor={findShip}
+                    id={name}
+                  >
+                    {shipBlocks.map((data: { name: string; id: number }) => (
+                      <div
+                        key={data.id}
+                        onClick={(e) => handleRotateShip(e)}
+                        id={String(data.name)}
+                        onMouseOver={() => handleMouseOver(data.id)}
+                      />
+                    ))}
+                  </Ship>
+                </ShipGrid>
+              );
+            })
+          )}
         </ShipContainer>
       </Footer>
     </Section>
@@ -209,3 +258,99 @@ const Response = (boardData: mapInterface[], shipLocation: number[]) => {
     return el;
   });
 };
+
+const Enemy = (
+  shipsData: shipInterface[],
+  enemyBoardData: mapInterface[],
+  setEnemyBoard: React.Dispatch<React.SetStateAction<mapInterface[]>>
+) => {
+  const [stack, setStack] = useState<string[][]>([]);
+
+  useEffect(() => {
+    const ships = shipAiGenerator.generateShipLocations(shipsData);
+    if (!ships.length) return;
+    const shipLocation = ships.map(
+      ({ locations }: { locations: string[] }) => locations
+    );
+    setStack(shipLocation);
+  }, [shipsData]);
+
+  const handleSpawn = () => {
+    const generateNumbers = stack.map((arr: string[]) => {
+      return arr.map((text) => {
+        const replaceZero = text.split("");
+
+        return replaceZero[0] === "0"
+          ? parseInt(replaceZero[1])
+          : parseInt(text);
+      });
+    });
+
+    const combineNumbers = generateNumbers.reduce(
+      (array, isArray) =>
+        Array.isArray(isArray) ? array.concat(isArray) : array,
+      []
+    );
+
+    const update = enemyBoardData.map((el) =>
+      combineNumbers.includes(el.id) ? { ...el, used: true } : el
+    );
+
+    setEnemyBoard(update);
+  };
+
+  return handleSpawn;
+};
+
+const GameDiv = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 0 20 px;
+  flex-flow: row wrap;
+`;
+
+const GameButton = styled.div`
+  margin: 0 20px;
+`;
+
+const Button = styled.button`
+  width: 130px;
+  height: 40px;
+  padding: 10px 25px;
+  font-family: "Lato", sans-serif;
+  font-weight: 500;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  position: relative;
+  display: inline-block;
+  background: #0868cf;
+  color: #fff;
+  z-index: 1;
+  border: none;
+  border-bottom: 1px solid white;
+
+  &:after {
+    border-bottom: 1px solid black;
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 100%;
+    top: 0;
+    right: 0;
+    z-index: -1;
+    background: white;
+    transition: all 0.3s ease;
+  }
+  &:hover {
+    color: #000;
+  }
+  &:hover:after {
+    left: 0;
+    width: 100%;
+  }
+  &:active {
+    top: 2px;
+  }
+`;

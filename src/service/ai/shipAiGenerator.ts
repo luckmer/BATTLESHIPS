@@ -31,6 +31,18 @@ class AiShipGenerator {
   collision = (locations: string[], ships: { locations: string[] }[]) => {
     let collision = false;
 
+    const rightWall = locations.some(
+      (position) => parseInt(position) % 10 === 1
+    );
+
+    const leftWall = locations.some(
+      (position) => parseInt(position) % 10 === 0
+    );
+
+    if (rightWall || leftWall) {
+      collision = true;
+    }
+
     ships.forEach((ship) => {
       locations.forEach((location) => {
         if (ship.locations.indexOf(location) >= 0) {
