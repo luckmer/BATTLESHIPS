@@ -13,8 +13,8 @@ import styled from "styled-components";
 
 import GenerateEnemyBoard from "../service/boardCreator/enemyBoard";
 import { shipInterface } from "../service/ships/interface";
-import { AppContext } from "../data/store";
-import { Types } from "../data/types/index";
+import { AppContext } from "../store/store";
+import { Types } from "../store/types/index";
 import {
   Section,
   Rotate,
