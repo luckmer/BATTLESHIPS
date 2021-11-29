@@ -60,6 +60,7 @@ class AiShipGenerator {
     ships.forEach((ship) => {
       let locations;
       const size = ship.size;
+
       do {
         locations = this.generateShip(size);
       } while (this.collision(locations, newShips));
@@ -70,6 +71,7 @@ class AiShipGenerator {
     return newShips;
   }
 }
+
 const shipAiGenerator = new AiShipGenerator();
 
 export default shipAiGenerator;

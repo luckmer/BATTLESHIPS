@@ -5,7 +5,8 @@ import {
   moveStatusPanel,
   rotateShipPanel,
   rotatePanel,
-  shipKey
+  shipKey,
+  draggedPanel
 } from "./reducers/index";
 
 const initialState = {
@@ -33,7 +34,8 @@ const reducer = (state: InitialStateType, action: any) => ({
   moveStatus: moveStatusPanel(state, action),
   rotateShip: rotateShipPanel(state, action),
   rotateStatus: rotatePanel(state, action),
-  uniqueShipKey: shipKey()
+  uniqueShipKey: shipKey(state, action),
+  dragged: draggedPanel(state, action)
 });
 
 const AppProvider: React.FC = ({ children }) => {

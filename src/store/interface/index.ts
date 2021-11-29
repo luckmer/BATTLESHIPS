@@ -27,12 +27,12 @@ type typesPayload = {
   [Types.Rotate_on]: Status;
   [Types.Drag_off]: Status;
   [Types.Drag_on]: Status;
-  [Types.Off]: {
-    buttonStatus: boolean;
-  };
-  [Types.On]: {
-    buttonStatus: boolean;
-  };
+  [Types.Set_Ship_key]: { id: number };
+  [Types.Rotate_Ship_On]: { ship: string };
+  [Types.Rotate_Ship_Off]: { ship: string };
+  [Types.Off]: { buttonStatus: boolean };
+  [Types.On]: { buttonStatus: boolean };
+  [Types.Set_Dragged_Status]: { dragged: boolean };
 };
 
 export type InitialStateType = {
@@ -44,6 +44,7 @@ export type InitialStateType = {
   rotateStatus: boolean;
   rotateShip: string[];
   uniqueShipKey: number;
+  dragged: boolean;
 };
 
 export type actionsPayload =

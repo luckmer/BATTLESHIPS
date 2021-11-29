@@ -12,7 +12,6 @@ export const moveStatusPanel = (
         status: true,
         response: action.payload.response
       };
-
     case Types.Incorrect_status:
       return {
         status: false,
@@ -28,7 +27,17 @@ export const rotateShipPanel = (
   state: InitialStateType,
   action: actionsPayload
 ) => {
-  return state.rotateShip;
+  switch (action.type) {
+    case Types.Rotate_Ship_Off:
+      return [
+        ...state.rotateShip.filter((value) => value !== action.payload.ship)
+      ];
+    case Types.Rotate_Ship_On:
+      return [...state.rotateShip, action.payload.ship];
+
+    default:
+      return state.rotateShip;
+  }
 };
 
 export const rotatePanel = (
@@ -59,6 +68,23 @@ export const gameDisplayPanel = (
   }
 };
 
-export const shipKey = () => {
-  return 0;
+export const shipKey = (state: InitialStateType, action: actionsPayload) => {
+  switch (action.type) {
+    case Types.Set_Ship_key:
+      return action.payload.id;
+    default:
+      return state.uniqueShipKey;
+  }
+};
+
+export const draggedPanel = (
+  state: InitialStateType,
+  action: actionsPayload
+) => {
+  switch (action.type) {
+    case Types.Set_Dragged_Status:
+      return action.payload.dragged;
+    default:
+      return state.dragged;
+  }
 };
