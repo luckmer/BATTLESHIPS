@@ -67,3 +67,56 @@ export const Section = styled.section`
 export const Footer = styled.footer`
   margin: 8vmin;
 `;
+
+export const GameDiv = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 0 20 px;
+  flex-flow: row wrap;
+`;
+
+export const GameButton = styled.div`
+  margin: 0 20px;
+`;
+
+export const Button = styled.button`
+  width: 130px;
+  height: 40px;
+  padding: 10px 25px;
+  font-family: "Lato", sans-serif;
+  font-weight: 500;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  position: relative;
+  display: inline-block;
+  background: #0868cf;
+  color: #fff;
+  z-index: 1;
+  border: none;
+  border-bottom: 1px solid white;
+
+  &:after {
+    border-bottom: 1px solid black;
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 100%;
+    top: 0;
+    right: 0;
+    z-index: -1;
+    background: white;
+    transition: all 0.3s ease;
+  }
+  &:hover {
+    color: #000;
+  }
+  &:hover:after {
+    left: 0;
+    width: 100%;
+  }
+  &:active {
+    top: 2px;
+  }
+`;

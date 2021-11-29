@@ -9,8 +9,6 @@ import { mapInterface } from "../service/boardCreator/interface";
 import { boardsInterface } from "./interface";
 import shipAiGenerator from "../service/ai/shipAiGenerator";
 
-import styled from "styled-components";
-
 import GenerateEnemyBoard from "../service/boardCreator/enemyBoard";
 import { shipInterface } from "../service/ships/interface";
 import { AppContext } from "../store/store";
@@ -23,7 +21,10 @@ import {
   Footer,
   ShipContainer,
   ShipGrid,
-  Ship
+  Ship,
+  GameDiv,
+  GameButton,
+  Button
 } from "../css/game.style";
 
 const Game = () => {
@@ -52,6 +53,7 @@ const Game = () => {
   const handleDragStartShip = (e: React.DragEvent<HTMLDivElement>) => {
     const target = (e.target as HTMLDivElement).id;
     e.dataTransfer.setData("id", target);
+
     dispatch({ type: Types.Set_Dragged_Status, payload: { dragged: true } });
   };
 
@@ -83,7 +85,7 @@ const Game = () => {
     const shipBlocker = BlockShip(shipLocation, boardData);
 
     dispatch({
-      type: Types.Incorrect_status,
+      type: Types.Correct_status,
       payload: {
         status: true,
         response: shipBlocker
@@ -168,13 +170,18 @@ const Game = () => {
 
   const generateEnemy = Enemy(shipsData, enemyBoardData, setEnemyBoard);
 
-  const handleRestartGame = () => {};
+  const handleRestartGame = () => {
+    const clearUserPanel = handleBoardClear(boardData);
+    const clearAiPanel = handleBoardClear(enemyBoardData);
+
+    setShip(shipsData);
+    setEnemyBoard(clearAiPanel);
+    setBoard(clearUserPanel);
+  };
 
   const handleStartGame = () => {
     generateEnemy();
   };
-
-  console.log(state);
 
   return (
     <Section>
@@ -307,55 +314,17 @@ const Enemy = (
   return handleSpawn;
 };
 
-const GameDiv = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  margin: 0 20 px;
-  flex-flow: row wrap;
-`;
+const handleBoardClear = (board: mapInterface[]) => {
+  return board.map((el) => {
+    const used = el.used;
 
-const GameButton = styled.div`
-  margin: 0 20px;
-`;
+    if (used) {
+      return {
+        ...el,
+        used: false
+      };
+    }
 
-const Button = styled.button`
-  width: 130px;
-  height: 40px;
-  padding: 10px 25px;
-  font-family: "Lato", sans-serif;
-  font-weight: 500;
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.5s ease;
-  position: relative;
-  display: inline-block;
-  background: #0868cf;
-  color: #fff;
-  z-index: 1;
-  border: none;
-  border-bottom: 1px solid white;
-
-  &:after {
-    border-bottom: 1px solid black;
-    position: absolute;
-    content: "";
-    width: 0;
-    height: 100%;
-    top: 0;
-    right: 0;
-    z-index: -1;
-    background: white;
-    transition: all 0.3s ease;
-  }
-  &:hover {
-    color: #000;
-  }
-  &:hover:after {
-    left: 0;
-    width: 100%;
-  }
-  &:active {
-    top: 2px;
-  }
-`;
+    return el;
+  });
+};

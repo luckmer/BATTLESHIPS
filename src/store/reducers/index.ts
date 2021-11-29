@@ -34,7 +34,6 @@ export const rotateShipPanel = (
       ];
     case Types.Rotate_Ship_On:
       return [...state.rotateShip, action.payload.ship];
-
     default:
       return state.rotateShip;
   }
