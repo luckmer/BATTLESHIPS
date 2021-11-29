@@ -27,15 +27,15 @@ import {
 } from "../css/game.style";
 
 const Game = () => {
-  const [rotateShip, setRotateShip] = useState<string[]>([]);
-  const [uniqueShipKey, setUniqueShipKey] = useState(0);
-  const [dragged, setDragged] = useState(false);
-
-  const { state, dispatch } = useContext(AppContext);
   const { enemyBoardData, setEnemyBoard } = GenerateEnemyBoard("enemy");
   const { boardData, setBoard } = GenerateBoard("player");
   const { shipData, shipsData, setShip } = ShipPanel();
+  const { state, dispatch } = useContext(AppContext);
+
   const rotateStatus = state.rotateStatus;
+  const rotateShip = state.rotateShip;
+  const uniqueShipKey = state.uniqueShipKey;
+  const dragged = state.dragged;
 
   const handleRotateShip = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -45,18 +45,18 @@ const Game = () => {
     const id = target.id;
 
     if (rotateShip.includes(id)) {
-      setRotateShip(rotateShip.filter((value: string) => value !== id));
-    } else setRotateShip((prev: string[]) => prev.concat(id));
+      dispatch({ type: Types.Rotate_Ship_Off, payload: { ship: id } });
+    } else dispatch({ type: Types.Rotate_Ship_On, payload: { ship: id } });
   };
 
   const handleDragStartShip = (e: React.DragEvent<HTMLDivElement>) => {
     const target = (e.target as HTMLDivElement).id;
     e.dataTransfer.setData("id", target);
-    setDragged(true);
+    dispatch({ type: Types.Set_Dragged_Status, payload: { dragged: true } });
   };
 
   const handleDropShip = (e: React.DragEvent<HTMLDivElement>) => {
-    setDragged(false);
+    dispatch({ type: Types.Set_Dragged_Status, payload: { dragged: false } });
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -70,7 +70,7 @@ const Game = () => {
     const ID = Number(target.id);
     const shipID = uniqueShipKey;
 
-    setDragged(false);
+    dispatch({ type: Types.Set_Dragged_Status, payload: { dragged: false } });
 
     let ship = shipData!.find(
       ({ name }: { name: string }) => name === droppedShip
@@ -103,15 +103,16 @@ const Game = () => {
     if (alreadyInUse) return;
 
     const deleteShip = shipData.filter((el) => el.name !== ship!.name);
-    const clearRotate = rotateShip.filter((name) => name !== ship!.name);
 
-    setRotateShip(clearRotate);
+    dispatch({ type: Types.Rotate_Ship_Off, payload: { ship: ship!.name } });
+    dispatch({ type: Types.Rotate_off, payload: { status: false } });
+
     setShip(deleteShip);
   };
 
   const handleMouseOver = (el: number) => {
     if (dragged) return;
-    setUniqueShipKey(el);
+    dispatch({ type: Types.Set_Ship_key, payload: { id: el } });
   };
 
   useEffect(() => {
@@ -142,7 +143,6 @@ const Game = () => {
   }, [rotateShip, rotateStatus, dispatch, state.rotateStatus]);
 
   useEffect(() => {
-    console.log(state.moveStatus);
     if (state.moveStatus.response) {
       setTimeout(() => {
         dispatch({
@@ -174,7 +174,7 @@ const Game = () => {
     generateEnemy();
   };
 
-  const enemyShips = enemyBoardData;
+  console.log(state);
 
   return (
     <Section>
@@ -192,7 +192,7 @@ const Game = () => {
             )
           )}
         </Div>
-        <ComputerGame shipData={enemyShips} />
+        <ComputerGame shipData={enemyBoardData} />
       </Rotate>
       <Footer>
         <ShipContainer>
