@@ -7,7 +7,7 @@ export const Ship = styled.div<Props>`
   width: ${({ size }) => `calc(4.6vmin * ${size})`};
   height: calc(4.6vmin * 1);
   border-radius: 2.3vmin;
-  background: ${({ setupColor }) => `${setupColor ? "orange" : "grey"} `};
+  background: ${({ setupColor }) => `${setupColor ? "orange" : "#678983"} `};
   transition: 0.3s linear;
 
   cursor: pointer;
@@ -16,6 +16,10 @@ export const Ship = styled.div<Props>`
     display: flex;
     flex-direction: row;
     width: 100%;
+  }
+
+  &:hover {
+    background: ${({ setupColor }) => `${setupColor ? "#181D31" : "#E6DDC4"} `};
   }
 `;
 
@@ -40,11 +44,17 @@ export const Div = styled.div`
   grid-template-columns: repeat(10, 4.6vmin);
 `;
 
-export const Grid = styled.div<{ boat: string | boolean | undefined }>`
+interface Test {
+  boat: string | boolean | undefined;
+  attack?: string | boolean | undefined;
+}
+
+export const Grid = styled.div<Test>`
   border: 1px solid hsla(0, 0%, 100%, 0.2);
   transition: all 0.2s;
 
-  background-color: ${({ boat }) => (boat ? "grey" : "")};
+  background-color: ${({ boat, attack }) =>
+    attack ? "red" : boat ? "grey" : ""};
 
   &:hover {
     background-color: #0868cf;
@@ -61,6 +71,7 @@ export const Section = styled.section`
   flex-direction: column;
   justify-content: space-evenly;
   max-width: 1800px;
+  height: 100%;
   margin: 0 auto;
 `;
 
