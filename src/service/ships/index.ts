@@ -4,6 +4,7 @@ export const shipTypes = [
     name: "Aircraft",
     size: 5,
     count: 1,
+    attacked: [],
     hitPoints: 5,
     hits: 0
   },
@@ -12,7 +13,7 @@ export const shipTypes = [
     name: "Battleship",
     size: 4,
     count: 1,
-    position: {},
+    attacked: [],
     hitPoints: 4,
     hits: 0
   },
@@ -21,6 +22,7 @@ export const shipTypes = [
     name: "Cruiser",
     size: 3,
     count: 1,
+    attacked: [],
     hitPoints: 3,
     hits: 0
   },
@@ -37,6 +39,7 @@ export const shipTypes = [
     name: "Carrier",
     size: 5,
     count: 1,
+    attacked: [],
     hitPoints: 2,
     hits: 0
   }

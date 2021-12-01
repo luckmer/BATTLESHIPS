@@ -41,7 +41,9 @@ const generator = (name: string) => {
       placer,
       location,
       used: false,
-      enemyUsed: false
+      enemyUsed: false,
+      attacked: [],
+      attack: false
     };
 
     map.push(grid);
