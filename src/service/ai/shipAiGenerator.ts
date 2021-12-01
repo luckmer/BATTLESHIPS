@@ -1,4 +1,4 @@
-import { shipInterface } from "../ships/interface/index";
+import { shipInterface, ShipProps } from "../ships/interface/index";
 import { BOARD_SIZE } from "../constants/index";
 
 class AiShipGenerator {
@@ -55,7 +55,7 @@ class AiShipGenerator {
   };
 
   generateShipLocations(ships: shipInterface[]) {
-    const newShips: { locations: string[] }[] = [];
+    const newShips: ShipProps[] = [];
 
     ships.forEach((ship) => {
       let locations;
@@ -65,7 +65,8 @@ class AiShipGenerator {
         locations = this.generateShip(size);
       } while (this.collision(locations, newShips));
 
-      newShips.push({ locations });
+      const data = { ...ship, locations };
+      newShips.push(data);
     });
 
     return newShips;

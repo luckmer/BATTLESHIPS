@@ -27,12 +27,20 @@ type typesPayload = {
   [Types.Rotate_on]: Status;
   [Types.Drag_off]: Status;
   [Types.Drag_on]: Status;
+  [Types.Set_Game_Over]: { player: string };
   [Types.Set_Ship_key]: { id: number };
   [Types.Rotate_Ship_On]: { ship: string };
   [Types.Rotate_Ship_Off]: { ship: string };
   [Types.Off]: { buttonStatus: boolean };
   [Types.On]: { buttonStatus: boolean };
   [Types.Set_Dragged_Status]: { dragged: boolean };
+  [Types.Set_Player_Destroyed_Boats]: {
+    player: arrInterface[] | undefined;
+  };
+
+  [Types.Set_Ai_Destroyed_Boats]: {
+    ai: arrInterface[] | undefined;
+  };
 };
 
 export type InitialStateType = {
@@ -41,11 +49,22 @@ export type InitialStateType = {
     status: boolean;
     response: string;
   };
+  destroyedBoats: {
+    player: arrInterface[] | undefined;
+    ai: arrInterface[] | undefined;
+  };
   rotateStatus: boolean;
   rotateShip: string[];
   uniqueShipKey: number;
   dragged: boolean;
+  gameOver: string;
 };
+
+interface arrInterface {
+  attacked: number[];
+  name: string;
+  size: string | number;
+}
 
 export type actionsPayload =
   ActionMap<typesPayload>[keyof ActionMap<typesPayload>];

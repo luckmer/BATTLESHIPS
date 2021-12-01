@@ -1,135 +1,52 @@
 import { useState, useEffect, useContext } from "react";
 
-import shipFunctions from "../service/ships/shipFunctions";
+import GenerateEnemyBoard from "../service/boardCreator/enemyBoard";
 import GenerateBoard from "../service/boardCreator/board";
 import ShipPanel from "../service/ships/shipPanel";
-import ComputerGame from "./computer/computerGame";
+import ComputerGame from "../components/computer/computerGame";
+import service from "../service/gameService/Index";
+import Enemy from "../service/ai/EnemyCreator";
 
-import { mapInterface } from "../service/boardCreator/interface";
-import { boardsInterface } from "./interface";
-import shipAiGenerator from "../service/ai/shipAiGenerator";
-
-import GenerateEnemyBoard from "../service/boardCreator/enemyBoard";
-import { shipInterface } from "../service/ships/interface";
+import { DragAndDropShip, PlayerDragAndDrop } from "../service/dragAndDrop";
+import { Section, Rotate, Footer, ShipContainer } from "../css/game.style";
+import { EnemyShipDestroyer, AiShipDestroyer } from "../service/callback";
+import { arrInterface } from "../service/boardCreator/interface";
 import { AppContext } from "../store/store";
 import { Types } from "../store/types/index";
 import {
-  Section,
-  Rotate,
-  Div,
-  Grid,
-  Footer,
-  ShipContainer,
-  ShipGrid,
-  Ship,
-  GameDiv,
-  GameButton,
-  Button
-} from "../css/game.style";
+  GameOverPanel,
+  PlayerBoard,
+  ButtonPanel,
+  Ships
+} from "../components/index";
 
 const Game = () => {
+  const [currentPlayer, setCurrentPlayer] = useState("right");
   const { enemyBoardData, setEnemyBoard } = GenerateEnemyBoard("enemy");
   const { boardData, setBoard } = GenerateBoard("player");
   const { shipData, shipsData, setShip } = ShipPanel();
   const { state, dispatch } = useContext(AppContext);
 
-  const rotateStatus = state.rotateStatus;
-  const rotateShip = state.rotateShip;
-  const uniqueShipKey = state.uniqueShipKey;
-  const dragged = state.dragged;
+  const PROPS = { dispatch, shipData, boardData, setBoard, setShip, state };
 
-  const handleRotateShip = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    const target = e.target as HTMLDivElement;
+  const { handleDragStartShip, handleDropShip, handleRotateShip } =
+    DragAndDropShip(state.rotateShip, dispatch);
 
-    const id = target.id;
-
-    if (rotateShip.includes(id)) {
-      dispatch({ type: Types.Rotate_Ship_Off, payload: { ship: id } });
-    } else dispatch({ type: Types.Rotate_Ship_On, payload: { ship: id } });
-  };
-
-  const handleDragStartShip = (e: React.DragEvent<HTMLDivElement>) => {
-    const target = (e.target as HTMLDivElement).id;
-    e.dataTransfer.setData("id", target);
-
-    dispatch({ type: Types.Set_Dragged_Status, payload: { dragged: true } });
-  };
-
-  const handleDropShip = (e: React.DragEvent<HTMLDivElement>) => {
-    dispatch({ type: Types.Set_Dragged_Status, payload: { dragged: false } });
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
-  const handleDropPlayer = (e: React.DragEvent<HTMLDivElement>) => {
-    const { shipPanel, ShipCollisionBlocker, BlockShip } = shipFunctions;
-    const target = e.target as HTMLDivElement;
-    const droppedShip = e.dataTransfer.getData("id");
-    const ID = Number(target.id);
-    const shipID = uniqueShipKey;
-
-    dispatch({ type: Types.Set_Dragged_Status, payload: { dragged: false } });
-
-    let ship = shipData!.find(
-      ({ name }: { name: string }) => name === droppedShip
-    );
-
-    if (!ship) return;
-
-    const shipLocation = shipPanel(ship, shipID, ID, rotateShip, rotateStatus);
-
-    const shipBlocker = BlockShip(shipLocation, boardData);
-
-    dispatch({
-      type: Types.Correct_status,
-      payload: {
-        status: true,
-        response: shipBlocker
-          ? "success"
-          : "you couldn't put the boat in the water"
-      }
-    });
-
-    if (!shipBlocker) return;
-
-    const update = Response(boardData, shipLocation);
-
-    setBoard(update);
-
-    const alreadyInUse = ShipCollisionBlocker(boardData, shipLocation);
-
-    if (alreadyInUse) return;
-
-    const deleteShip = shipData.filter((el) => el.name !== ship!.name);
-
-    dispatch({ type: Types.Rotate_Ship_Off, payload: { ship: ship!.name } });
-    dispatch({ type: Types.Rotate_off, payload: { status: false } });
-
-    setShip(deleteShip);
-  };
-
-  const handleMouseOver = (el: number) => {
-    if (dragged) return;
-    dispatch({ type: Types.Set_Ship_key, payload: { id: el } });
-  };
+  const { handleDragOver, handleDropPlayer, handleMouseOver } =
+    PlayerDragAndDrop({ ...PROPS });
 
   useEffect(() => {
-    if (!rotateShip.length) {
+    if (!state.rotateShip.length) {
       dispatch({ type: Types.Rotate_off, payload: { status: false } });
       return;
     }
 
     const keyPress = (e: KeyboardEvent) => {
-      if (e.key === "r" && rotateShip.length) {
+      if (e.key === "r" && state.rotateShip.length) {
         let value = state.rotateStatus;
-
         dispatch({
           type:
-            e.key === "r" && rotateShip.length
+            e.key === "r" && state.rotateShip.length
               ? Types.Rotate_on
               : Types.Rotate_off,
           payload: {
@@ -142,7 +59,7 @@ const Game = () => {
     document.body.addEventListener("keypress", keyPress);
 
     return () => document.body.removeEventListener("keypress", keyPress);
-  }, [rotateShip, rotateStatus, dispatch, state.rotateStatus]);
+  }, [dispatch, state.rotateStatus, state.rotateShip.length]);
 
   useEffect(() => {
     if (state.moveStatus.response) {
@@ -163,90 +80,112 @@ const Game = () => {
     if (allShipsInOnePlace === 20) {
       dispatch({ type: Types.Off, payload: { buttonStatus: true } });
       return;
-    } else {
-      dispatch({ type: Types.On, payload: { buttonStatus: false } });
-    }
+    } else dispatch({ type: Types.On, payload: { buttonStatus: false } });
   }, [shipData, dispatch, boardData]);
 
-  const generateEnemy = Enemy(shipsData, enemyBoardData, setEnemyBoard);
+  useEffect(() => {
+    EnemyShipDestroyer(
+      enemyBoardData,
+      state,
+      (callback: arrInterface[] | undefined) => {
+        dispatch({
+          type: Types.Set_Player_Destroyed_Boats,
+          payload: { player: callback }
+        });
+      }
+    );
+  }, [enemyBoardData, dispatch, state]);
+
+  useEffect(() => {
+    const noMoves = boardData.filter((el) => el.attack !== true).length;
+    if (noMoves <= 1) return;
+    if (currentPlayer === "right") return;
+    setCurrentPlayer("right");
+
+    AiShipDestroyer(boardData, setBoard, state, (callback) => {
+      dispatch({
+        type: Types.Set_Ai_Destroyed_Boats,
+        payload: { ai: callback }
+      });
+    });
+  }, [boardData, setBoard, currentPlayer, state, dispatch]);
 
   const handleRestartGame = () => {
-    const clearUserPanel = handleBoardClear(boardData);
-    const clearAiPanel = handleBoardClear(enemyBoardData);
+    const clearUserPanel = service.handleBoardClear(boardData);
+    const clearAiPanel = service.handleBoardClear(enemyBoardData);
 
     setShip(shipsData);
     setEnemyBoard(clearAiPanel);
     setBoard(clearUserPanel);
   };
 
+  const generate = Enemy(shipsData, enemyBoardData, setEnemyBoard);
   const handleStartGame = () => {
-    generateEnemy();
+    generate();
   };
 
-  return (
+  const handleShipAttack = (id: number) => {
+    if (currentPlayer === "left") return;
+
+    const findFire = enemyBoardData.find((el) => el.id === id);
+    const findShips = enemyBoardData
+      .filter((el) => el.used === true)
+      .map((_, i) => i).length;
+
+    if (!findFire || !findShips || findFire?.attack) return;
+
+    const update = enemyBoardData.map((el) => {
+      if (el.id === findFire.id) {
+        return { ...el, attack: true };
+      }
+
+      if (el.name === findFire.name) {
+        return { ...el, attacked: [...el.attacked, findFire.id] };
+      }
+
+      return el;
+    });
+
+    setCurrentPlayer("left");
+    setEnemyBoard(update);
+  };
+
+  const ShipsProps = {
+    shipData,
+    state,
+    handleDragOver,
+    handleDragStartShip,
+    handleDropShip,
+    handleRotateShip,
+    handleMouseOver
+  };
+
+  const winner = state.gameOver;
+
+  return winner ? (
+    <GameOverPanel shipsData={shipsData} enemyBoardData={enemyBoardData} />
+  ) : (
     <Section>
       <Rotate>
-        <Div>
-          {boardData.map(
-            ({ id, used }: { id: number; used: string | boolean }, i) => (
-              <Grid
-                id={String(i + 1)}
-                key={id}
-                onDragOver={(e) => handleDragOver(e)}
-                onDrop={(e) => handleDropPlayer(e)}
-                boat={used}
-              />
-            )
-          )}
-        </Div>
-        <ComputerGame shipData={enemyBoardData} />
+        <PlayerBoard
+          boardData={boardData}
+          handleDragOver={handleDragOver}
+          handleDropPlayer={handleDropPlayer}
+        />
+        <ComputerGame
+          shipData={enemyBoardData}
+          handleShipAttack={handleShipAttack}
+        />
       </Rotate>
       <Footer>
         <ShipContainer>
           {state.buttonStatus ? (
-            <GameDiv>
-              <GameButton>
-                <Button onClick={handleStartGame}>Start Game</Button>
-              </GameButton>
-              <GameButton>
-                <Button onClick={handleRestartGame}>Restart</Button>
-              </GameButton>
-            </GameDiv>
+            <ButtonPanel
+              handleStartGame={handleStartGame}
+              handleRestartGame={handleRestartGame}
+            />
           ) : (
-            shipData.map(({ id, size, name }: boardsInterface) => {
-              const findShip = rotateShip.some((el: string) => el === name);
-              const rotateBlocker = rotateStatus && findShip;
-
-              const shipBlocks = new Array(size)
-                .fill(1)
-                .map((el: number, i) => {
-                  return { name: name, id: el + i };
-                });
-
-              return (
-                <ShipGrid status={rotateBlocker} key={id}>
-                  <Ship
-                    draggable
-                    onDragOver={(e) => handleDragOver(e)}
-                    onDragStart={(e) => handleDragStartShip(e)}
-                    onDrop={(e) => handleDropShip(e)}
-                    size={size}
-                    status={rotateBlocker}
-                    setupColor={findShip}
-                    id={name}
-                  >
-                    {shipBlocks.map((data: { name: string; id: number }) => (
-                      <div
-                        key={data.id}
-                        onClick={(e) => handleRotateShip(e)}
-                        id={String(data.name)}
-                        onMouseOver={() => handleMouseOver(data.id)}
-                      />
-                    ))}
-                  </Ship>
-                </ShipGrid>
-              );
-            })
+            <Ships props={ShipsProps} />
           )}
         </ShipContainer>
       </Footer>
@@ -255,76 +194,3 @@ const Game = () => {
 };
 
 export default Game;
-
-const Response = (boardData: mapInterface[], shipLocation: number[]) => {
-  return boardData.map((el) => {
-    const id = Number(el.id);
-
-    if (shipLocation.includes(id)) {
-      const usedPanel = boardData.filter((el) => shipLocation.includes(el.id));
-
-      const usedTester = usedPanel.some(({ used }) => used === true);
-
-      if (!usedTester) return { ...el, used: true };
-    }
-    return el;
-  });
-};
-
-const Enemy = (
-  shipsData: shipInterface[],
-  enemyBoardData: mapInterface[],
-  setEnemyBoard: React.Dispatch<React.SetStateAction<mapInterface[]>>
-) => {
-  const [stack, setStack] = useState<string[][]>([]);
-
-  useEffect(() => {
-    const ships = shipAiGenerator.generateShipLocations(shipsData);
-    if (!ships.length) return;
-    const shipLocation = ships.map(
-      ({ locations }: { locations: string[] }) => locations
-    );
-    setStack(shipLocation);
-  }, [shipsData]);
-
-  const handleSpawn = () => {
-    const generateNumbers = stack.map((arr: string[]) => {
-      return arr.map((text) => {
-        const replaceZero = text.split("");
-
-        return replaceZero[0] === "0"
-          ? parseInt(replaceZero[1])
-          : parseInt(text);
-      });
-    });
-
-    const combineNumbers = generateNumbers.reduce(
-      (array, isArray) =>
-        Array.isArray(isArray) ? array.concat(isArray) : array,
-      []
-    );
-
-    const update = enemyBoardData.map((el) =>
-      combineNumbers.includes(el.id) ? { ...el, used: true } : el
-    );
-
-    setEnemyBoard(update);
-  };
-
-  return handleSpawn;
-};
-
-const handleBoardClear = (board: mapInterface[]) => {
-  return board.map((el) => {
-    const used = el.used;
-
-    if (used) {
-      return {
-        ...el,
-        used: false
-      };
-    }
-
-    return el;
-  });
-};
