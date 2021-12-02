@@ -1,7 +1,12 @@
+import { shipInterface } from "./../ships/interface/index";
 import { mapInterface, arrInterface } from "../boardCreator/interface";
 
 class Service {
-  Response = (boardData: mapInterface[], shipLocation: number[]) => {
+  Response = (
+    boardData: mapInterface[],
+    shipLocation: number[],
+    ship: shipInterface
+  ) => {
     return boardData.map((el) => {
       const id = Number(el.id);
 
@@ -12,7 +17,8 @@ class Service {
 
         const usedTester = usedPanel.some(({ used }) => used === true);
 
-        if (!usedTester) return { ...el, used: true };
+        if (!usedTester)
+          return { ...el, used: true, name: ship.name, opponent: el.name };
       }
       return el;
     });

@@ -23,7 +23,7 @@ import {
 const Game = () => {
   const [currentPlayer, setCurrentPlayer] = useState("right");
   const { enemyBoardData, setEnemyBoard } = GenerateEnemyBoard("enemy");
-  const { boardData, setBoard } = GenerateBoard("player");
+  const { boardData, setBoard } = GenerateBoard("enemy");
   const { shipData, shipsData, setShip } = ShipPanel();
   const { state, dispatch } = useContext(AppContext);
 
@@ -103,6 +103,7 @@ const Game = () => {
     setCurrentPlayer("right");
 
     AiShipDestroyer(boardData, setBoard, state, (callback) => {
+      console.log(callback);
       dispatch({
         type: Types.Set_Ai_Destroyed_Boats,
         payload: { ai: callback }

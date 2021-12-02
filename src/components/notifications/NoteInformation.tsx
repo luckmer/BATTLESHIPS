@@ -22,15 +22,13 @@ interface PropsInterface {
 }
 
 const NoteInformation = (props: PropsInterface) => {
-  const { state, dispatch } = useContext(AppContext);
+  const { dispatch } = useContext(AppContext);
 
   const { notification, destroyedBoats } = props;
   const { player, ai } = destroyedBoats;
 
   const response = notification.response;
   const status = notification.status;
-
-  console.log(state.gameOver);
 
   useEffect(() => {
     if (ai?.length) {
@@ -55,13 +53,13 @@ const NoteInformation = (props: PropsInterface) => {
 
     if (player?.length === 5)
       dispatch({ type: Types.Set_Game_Over, payload: { player: "player" } });
-  }, [status, player, dispatch]);
+  }, [player, dispatch]);
 
   useEffect(() => {
     if (!response) return;
     if (typeof window !== "undefined") injectStyle();
     toast.dark(response);
-  }, [status, response]);
+  }, [response]);
 
   return <ToastContainer limit={2} />;
 };
