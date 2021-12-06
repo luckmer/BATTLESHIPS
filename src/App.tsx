@@ -1,9 +1,10 @@
 import { useContext } from "react";
+import { Routes, Route } from "react-router-dom";
+
 import { AppContext } from "./store/store";
 import { Main } from "./css/Main.style";
-
-import { NavBar, NoteInformation, SideMenu } from "./components";
-import Game from "./pages/game";
+import { NavBar, NoteInformation } from "./components";
+import { routes } from "./routes";
 
 const App = () => {
   const { state } = useContext(AppContext);
@@ -12,13 +13,16 @@ const App = () => {
 
   return (
     <Main>
-      <SideMenu />
       <NoteInformation
         notification={notification}
         destroyedBoats={destroyedBoats}
       />
       <NavBar />
-      <Game />
+      <Routes>
+        {routes.map(({ path, Element }) => (
+          <Route key={path} path={path} element={<Element />} />
+        ))}
+      </Routes>
     </Main>
   );
 };

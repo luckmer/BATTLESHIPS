@@ -25,7 +25,7 @@ const GameOverPanel = (props: OverProps) => {
         <GameOverSpacer>
           <h1>Game Over</h1>
           <p>
-            You have sunk all ships with
+            You have sunk all ships with <br />
             <strong>accuracy {~~displayAccuracy}%</strong>
           </p>
           <button> Home </button>

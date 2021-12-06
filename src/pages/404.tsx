@@ -1,5 +1,5 @@
-const IncorrectGame = () => {
+const IncorrectPage = () => {
   return <div></div>;
 };
 
-export default IncorrectGame;
+export default IncorrectPage;

@@ -4,12 +4,15 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import GlobalStyle from "./css/Global.style";
 import { AppProvider } from "./store/store";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
-  <AppProvider>
-    <App />
-    <GlobalStyle />
-  </AppProvider>,
+  <BrowserRouter>
+    <AppProvider>
+      <App />
+      <GlobalStyle />
+    </AppProvider>
+  </BrowserRouter>,
   document.getElementById("root")
 );
 

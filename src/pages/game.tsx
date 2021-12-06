@@ -1,22 +1,16 @@
-import { useState, useContext } from "react";
+import { useState, useContext, Fragment } from "react";
 
 import GenerateEnemyBoard from "../service/boardCreator/enemyBoard";
 import GenerateBoard from "../service/boardCreator/board";
 import ShipPanel from "../service/ships/shipPanel";
 import ComputerGame from "../components/computer/computerGame";
-import service from "../service/gameService/Index";
 import Enemy from "../service/ai/EnemyCreator";
 import AsyncComponet from "../service/async";
-
+import { SideMenu } from "../components/index";
 import { DragAndDropShip, PlayerDragAndDrop } from "../service/dragAndDrop";
-import { Section, Rotate, Footer, ShipContainer } from "../css/game.style";
+import { Section, Rotate } from "../css/game.style";
 import { AppContext } from "../store/store";
-import {
-  GameOverPanel,
-  PlayerBoard,
-  ButtonPanel,
-  Ships
-} from "../components/index";
+import { GameOverPanel, PlayerBoard, Ships } from "../components/index";
 import { Types } from "../store/types";
 
 const Game = () => {
@@ -76,13 +70,13 @@ const Game = () => {
   };
 
   const ShipsProps = {
-    shipData,
-    state,
+    ...PROPS,
     handleDragOver,
     handleDragStartShip,
     handleDropShip,
     handleRotateShip,
-    handleMouseOver
+    handleMouseOver,
+    handleStartGame
   };
 
   const winner = state.gameOver;
@@ -90,30 +84,23 @@ const Game = () => {
   return winner ? (
     <GameOverPanel shipsData={shipsData} enemyBoardData={enemyBoardData} />
   ) : (
-    <Section>
-      <Rotate id="here">
-        <PlayerBoard
-          boardData={boardData}
-          handleDragOver={handleDragOver}
-          handleDropPlayer={handleDropPlayer}
-        />
-        <ComputerGame
-          shipData={enemyBoardData}
-          handleShipAttack={handleShipAttack}
-        />
-      </Rotate>
-      {!state.gameStatus && (
-        <Footer>
-          <ShipContainer>
-            {state.buttonStatus ? (
-              <ButtonPanel handleStartGame={handleStartGame} />
-            ) : (
-              <Ships props={ShipsProps} />
-            )}
-          </ShipContainer>
-        </Footer>
-      )}
-    </Section>
+    <Fragment>
+      <SideMenu />
+      <Section>
+        <Rotate>
+          <PlayerBoard
+            boardData={boardData}
+            handleDragOver={handleDragOver}
+            handleDropPlayer={handleDropPlayer}
+          />
+          <ComputerGame
+            shipData={enemyBoardData}
+            handleShipAttack={handleShipAttack}
+          />
+        </Rotate>
+        <Ships props={ShipsProps} />
+      </Section>
+    </Fragment>
   );
 };
 

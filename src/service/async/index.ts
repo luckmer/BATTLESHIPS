@@ -77,10 +77,9 @@ const AsyncComponet = (props: asyncInterface) => {
       : shipsData.filter((el) => findShip.includes(el.name));
 
     const shipPanel = uniqueShipsOptions.length
-      ? shipData.filter((el) => {
-          const name = el.name;
-          return !uniqiueName.includes(name as any);
-        })
+      ? shipsData.filter(
+          (el) => ![...uniqiueName, ...findShip].includes(el.name)
+        )
       : shipsData.filter((el) => !findShip.includes(el.name));
 
     const update = UpdateArrayMethod(

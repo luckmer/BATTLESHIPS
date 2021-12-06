@@ -15,6 +15,8 @@ export const Ship = styled.div<Props>`
   div {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
     width: 100%;
   }
 
@@ -23,17 +25,16 @@ export const Ship = styled.div<Props>`
   }
 `;
 
-export const ShipContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  flex-flow: row wrap;
-`;
-
 export const ShipGrid = styled.div<any>`
-  display: flex;
   transform: rotate(${({ status }) => (status ? "90deg" : "0deg")});
   z-index: 999;
+  height: calc(
+    ${({ size, status }) => (status ? `4.6vmin *${size}` : `4.6vmin`)}
+  );
+  margin: 40px 0 40px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const Div = styled.div`
@@ -75,15 +76,11 @@ export const Section = styled.section`
   margin: 0 auto;
 `;
 
-export const Footer = styled.footer`
-  margin: 8vmin;
-`;
-
 export const GameDiv = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-evenly;
-  margin: 0 20 px;
+  margin-top: 20px;
+  justify-content: center;
   flex-flow: row wrap;
 `;
 

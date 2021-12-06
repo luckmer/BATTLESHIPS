@@ -76,6 +76,7 @@ const SideMenu = () => {
       </Side.SideMenuPanel>
       <Side.Section gameOn={gameOn}>
         <Side.Clicker onClick={handleClick}>
+          <p>History</p>
           <AiOutlineArrowRight />
         </Side.Clicker>
       </Side.Section>

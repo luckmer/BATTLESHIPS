@@ -51,8 +51,8 @@ export const Section = styled.section<{ gameOn: boolean }>`
 `;
 
 export const Clicker = styled.div`
-  width: 60px;
-  height: 25px;
+  width: 70px;
+  height: 45px;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   background-color: #0868cf;
@@ -61,11 +61,17 @@ export const Clicker = styled.div`
     width: 65px;
   }
   padding-right: 5px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
   color: white;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  p {
+    padding-right: 5px;
+  }
+  &:active {
+    width: 75px;
+  }
 `;
 
 export const SideMenuPanel = styled.section<{ open: boolean; gameOn: boolean }>`

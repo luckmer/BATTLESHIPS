@@ -38,7 +38,7 @@ const NoteInformation = (props: PropsInterface) => {
       toast.warn(`the enemy sunk your ${lastElement}`);
     }
 
-    if (ai?.length === 5)
+    if (ai?.length === 20)
       dispatch({ type: Types.Set_Game_Over, payload: { player: "ai" } });
   }, [ai, dispatch]);
 
@@ -50,7 +50,7 @@ const NoteInformation = (props: PropsInterface) => {
       toast.success(`You sunk the ${lastElement}`);
     }
 
-    if (player?.length === 5)
+    if (player?.length === 20)
       dispatch({ type: Types.Set_Game_Over, payload: { player: "player" } });
   }, [player, dispatch]);
 
