@@ -1,3 +1,4 @@
+import { shipInterface } from "./../../service/ships/interface/index";
 import { Types } from "../types/index";
 
 type ActionMap<M extends { [index: string]: any }> = {
@@ -20,6 +21,16 @@ type Status = {
   status: boolean;
 };
 
+type droppedShipInterface = {
+  name: string;
+  position: number[];
+}[];
+
+type droppedShipPanel = {
+  name: string;
+  position: number[];
+};
+
 type typesPayload = {
   [Types.Incorrect_status]: dropStatus;
   [Types.Correct_status]: dropStatus;
@@ -38,8 +49,25 @@ type typesPayload = {
     player: arrInterface[] | undefined;
   };
 
+  [Types.Save_Dropped_Boards]: droppedShipPanel;
   [Types.Set_Ai_Destroyed_Boats]: {
     ai: arrInterface[] | undefined;
+  };
+
+  [Types.Set_Selected_Boats]: {
+    setBoats: droppedShipInterface;
+  };
+
+  [Types.Set_Unclick_Boats]: {
+    setBoats: [];
+  };
+
+  [Types.Set_Update_Curent_Move]: {
+    updateCurrentMove: {
+      name: shipInterface;
+      position: number[];
+      length: any;
+    };
   };
 };
 
@@ -58,6 +86,15 @@ export type InitialStateType = {
   uniqueShipKey: number;
   dragged: boolean;
   gameOver: string;
+  droppedPlayerShips: droppedShipInterface;
+  selectedShipOptions: {
+    setBoats: droppedShipInterface;
+    updateCurrentMove: {
+      name: shipInterface;
+      position: number[];
+      length: any;
+    }[];
+  };
 };
 
 interface arrInterface {

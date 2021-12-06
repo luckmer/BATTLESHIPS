@@ -7,7 +7,6 @@ import Game from "./pages/game";
 
 const App = () => {
   const { state } = useContext(AppContext);
-
   const notification = state.moveStatus;
   const destroyedBoats = state.destroyedBoats;
 

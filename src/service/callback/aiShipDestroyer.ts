@@ -32,10 +32,7 @@ const AiShipDestroyer = (
     return el;
   });
 
-  if (service.boardMoved(boardData, update)) {
-    setBoard(update);
-  }
-
+  if (service.boardMoved(boardData, update)) setBoard(update);
   const playerDestroyedBoats = shipGenerator.generateBoats(update);
 
   if (service.boardMoved(playerDestroyedBoats, state.destroyedBoats.ai)) {

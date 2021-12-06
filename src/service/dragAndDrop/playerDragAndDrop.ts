@@ -32,6 +32,7 @@ const PlayerDragAndDrop = (props: PropsInterface) => {
     const droppedShip = e.dataTransfer.getData("id");
     const ID = Number(target.id);
     const shipID = uniqueShipKey;
+    const selectedMove = state.selectedShipOptions.setBoats;
 
     dispatch({ type: Types.Set_Dragged_Status, payload: { dragged: false } });
 
@@ -66,6 +67,25 @@ const PlayerDragAndDrop = (props: PropsInterface) => {
     if (alreadyInUse) return;
 
     const deleteShip = shipData.filter((el) => el.name !== ship!.name);
+
+    if (selectedMove.length) {
+      const length: number = selectedMove.length;
+      const name: string = ship.name as string;
+
+      const data: any = { name: name, position: shipLocation, length: length };
+
+      dispatch({
+        type: Types.Set_Update_Curent_Move,
+        payload: { updateCurrentMove: { ...data } }
+      });
+    }
+
+    if (!selectedMove.length) {
+      dispatch({
+        type: Types.Save_Dropped_Boards,
+        payload: { name: ship.name, position: shipLocation }
+      });
+    }
 
     dispatch({ type: Types.Rotate_Ship_Off, payload: { ship: ship!.name } });
     dispatch({ type: Types.Rotate_off, payload: { status: false } });

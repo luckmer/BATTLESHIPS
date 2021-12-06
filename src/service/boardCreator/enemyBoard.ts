@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import { mapInterface } from "./interface";
-
 import generator from "./generator";
 
 const GenerateEnemyBoard = (name: string) => {

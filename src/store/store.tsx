@@ -1,7 +1,13 @@
 import React, { createContext, useReducer, Dispatch } from "react";
-import { InitialStateType, actionsPayload } from "./interface";
 
-import { setDestroyedBoats, setGameStatus } from "./reducers/boats.reducer";
+import { InitialStateType, actionsPayload } from "./interface";
+import {
+  setUserDroppedShips,
+  setupSelectedOptions,
+  setDestroyedBoats,
+  setGameStatus
+} from "./reducers/boats.reducer";
+
 import {
   gameDisplayPanel,
   moveStatusPanel,
@@ -19,7 +25,9 @@ const initialState = {
   uniqueShipKey: 0,
   moveStatus: { status: false, response: "" },
   destroyedBoats: { player: [], ai: [] },
-  gameOver: ""
+  gameOver: "",
+  droppedPlayerShips: [],
+  selectedShipOptions: { setBoats: [], updateCurrentMove: [] }
 };
 
 const AppContext = createContext<{
@@ -31,6 +39,8 @@ const AppContext = createContext<{
 });
 
 const reducer = (state: InitialStateType, action: any) => ({
+  selectedShipOptions: setupSelectedOptions(state, action),
+  droppedPlayerShips: setUserDroppedShips(state, action),
   destroyedBoats: setDestroyedBoats(state, action),
   buttonStatus: gameDisplayPanel(state, action),
   moveStatus: moveStatusPanel(state, action),

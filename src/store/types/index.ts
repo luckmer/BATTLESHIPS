@@ -1,7 +1,11 @@
 export enum Types {
   Set_Player_Destroyed_Boats = "SET_PLAYER_DESTROYED_BOATS",
   Set_Ai_Destroyed_Boats = "SET_AI_DESTROYED_BOATS",
+  Save_Dropped_Boards = "SAVE_DROPPED_BOARDS ",
+  Set_Unclick_Boats = "SET_UNCLICK_BOATS",
   Set_Dragged_Status = "SET_DRAGGED_STATUS",
+  Set_Selected_Boats = "SET_SELECTED_BOATS",
+  Set_Update_Curent_Move = "SET_UPDATE_CURRENT_MOVE",
   Incorrect_status = "INCORRECT_STATUS",
   Rotate_Ship_Off = "ROTATE_SHIP_OFF",
   Rotate_Ship_On = "ROTATE_SHIP_ON",
