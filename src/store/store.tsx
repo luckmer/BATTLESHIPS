@@ -7,6 +7,7 @@ import {
   setDestroyedBoats,
   setGameStatus
 } from "./reducers/boats.reducer";
+import { setGameOn } from "./reducers/game.reducer";
 
 import {
   gameDisplayPanel,
@@ -27,7 +28,8 @@ const initialState = {
   destroyedBoats: { player: [], ai: [] },
   gameOver: "",
   droppedPlayerShips: [],
-  selectedShipOptions: { setBoats: [], updateCurrentMove: [] }
+  selectedShipOptions: { setBoats: [], updateCurrentMove: [] },
+  gameStatus: false
 };
 
 const AppContext = createContext<{
@@ -48,7 +50,8 @@ const reducer = (state: InitialStateType, action: any) => ({
   rotateStatus: rotatePanel(state, action),
   gameOver: setGameStatus(state, action),
   uniqueShipKey: shipKey(state, action),
-  dragged: draggedPanel(state, action)
+  dragged: draggedPanel(state, action),
+  gameStatus: setGameOn(state, action)
 });
 
 const AppProvider: React.FC = ({ children }) => {

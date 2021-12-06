@@ -45,38 +45,26 @@ type typesPayload = {
   [Types.Off]: { buttonStatus: boolean };
   [Types.On]: { buttonStatus: boolean };
   [Types.Set_Dragged_Status]: { dragged: boolean };
-  [Types.Set_Player_Destroyed_Boats]: {
-    player: arrInterface[] | undefined;
-  };
-
+  [Types.Set_Player_Destroyed_Boats]: { player: arrInterface[] | undefined };
+  [Types.Set_Game_Off]: boolean;
+  [Types.Set_Game_On]: boolean;
   [Types.Save_Dropped_Boards]: droppedShipPanel;
-  [Types.Set_Ai_Destroyed_Boats]: {
-    ai: arrInterface[] | undefined;
-  };
-
-  [Types.Set_Selected_Boats]: {
-    setBoats: droppedShipInterface;
-  };
-
-  [Types.Set_Unclick_Boats]: {
-    setBoats: [];
-  };
-
+  [Types.Set_Ai_Destroyed_Boats]: { ai: arrInterface[] | undefined };
+  [Types.Set_Selected_Boats]: { setBoats: droppedShipInterface };
+  [Types.Set_Unclick_Boats]: { setBoats: [] };
   [Types.Set_Update_Curent_Move]: {
     updateCurrentMove: {
       name: shipInterface;
       position: number[];
-      length: any;
+      length: number;
     };
   };
 };
 
 export type InitialStateType = {
+  gameStatus: boolean;
   buttonStatus: boolean;
-  moveStatus: {
-    status: boolean;
-    response: string;
-  };
+  moveStatus: { status: boolean; response: string };
   destroyedBoats: {
     player: arrInterface[] | undefined;
     ai: arrInterface[] | undefined;

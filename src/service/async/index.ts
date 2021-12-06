@@ -1,3 +1,4 @@
+import { MAX_SHIP_SIZE } from "./../constants/index";
 import { useEffect } from "react";
 import { asyncInterface } from "./interface";
 import { arrInterface } from "./../boardCreator/interface/index";
@@ -137,7 +138,7 @@ const AsyncComponet = (props: asyncInterface) => {
       .map(({ used }: { used: boolean }) => used)
       .filter((el) => el).length;
 
-    if (allShipsInOnePlace === 20) {
+    if (allShipsInOnePlace === MAX_SHIP_SIZE) {
       dispatch({ type: Types.Off, payload: { buttonStatus: true } });
       return;
     } else dispatch({ type: Types.On, payload: { buttonStatus: false } });

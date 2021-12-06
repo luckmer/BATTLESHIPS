@@ -17,6 +17,7 @@ import {
   ButtonPanel,
   Ships
 } from "../components/index";
+import { Types } from "../store/types";
 
 const Game = () => {
   const [currentPlayer, setCurrentPlayer] = useState("right");
@@ -46,18 +47,11 @@ const Game = () => {
 
   AsyncComponet({ ...PROPS });
 
-  const handleRestartGame = () => {
-    const clearUserPanel = service.handleBoardClear(boardData);
-    const clearAiPanel = service.handleBoardClear(enemyBoardData);
-
-    setShip(shipsData);
-    setEnemyBoard(clearAiPanel);
-    setBoard(clearUserPanel);
-  };
-
   const generate = Enemy(shipsData, enemyBoardData, setEnemyBoard);
+
   const handleStartGame = () => {
     generate();
+    dispatch({ type: Types.Set_Game_On, payload: true });
   };
 
   const handleShipAttack = (id: number) => {
@@ -97,7 +91,7 @@ const Game = () => {
     <GameOverPanel shipsData={shipsData} enemyBoardData={enemyBoardData} />
   ) : (
     <Section>
-      <Rotate>
+      <Rotate id="here">
         <PlayerBoard
           boardData={boardData}
           handleDragOver={handleDragOver}
@@ -108,18 +102,17 @@ const Game = () => {
           handleShipAttack={handleShipAttack}
         />
       </Rotate>
-      <Footer>
-        <ShipContainer>
-          {state.buttonStatus ? (
-            <ButtonPanel
-              handleStartGame={handleStartGame}
-              handleRestartGame={handleRestartGame}
-            />
-          ) : (
-            <Ships props={ShipsProps} />
-          )}
-        </ShipContainer>
-      </Footer>
+      {!state.gameStatus && (
+        <Footer>
+          <ShipContainer>
+            {state.buttonStatus ? (
+              <ButtonPanel handleStartGame={handleStartGame} />
+            ) : (
+              <Ships props={ShipsProps} />
+            )}
+          </ShipContainer>
+        </Footer>
+      )}
     </Section>
   );
 };

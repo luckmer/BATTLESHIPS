@@ -28,7 +28,7 @@ const GameOverPanel = (props: OverProps) => {
             You have sunk all ships with
             <strong>accuracy {~~displayAccuracy}%</strong>
           </p>
-          <button> Play Again </button>
+          <button> Home </button>
         </GameOverSpacer>
       </Modal>
     </Section>

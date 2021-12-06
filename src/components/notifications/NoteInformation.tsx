@@ -28,7 +28,6 @@ const NoteInformation = (props: PropsInterface) => {
   const { player, ai } = destroyedBoats;
 
   const response = notification.response;
-  const status = notification.status;
 
   useEffect(() => {
     if (ai?.length) {
