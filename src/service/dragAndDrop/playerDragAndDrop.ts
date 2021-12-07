@@ -72,7 +72,7 @@ const PlayerDragAndDrop = (props: PropsInterface) => {
       const length: number = selectedMove.length;
       const name: string = ship.name as string;
 
-      const data: any = { name: name, position: shipLocation, length: length };
+      const data = { name: name, position: shipLocation, length: length };
 
       dispatch({
         type: Types.Set_Update_Curent_Move,

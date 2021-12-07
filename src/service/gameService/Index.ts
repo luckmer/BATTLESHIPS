@@ -25,8 +25,8 @@ class Service {
   };
 
   boardMoved = (
-    original: mapInterface[] | arrInterface[] | undefined,
-    updated: mapInterface[] | arrInterface[] | undefined
+    original: mapInterface[] | arrInterface[] | shipInterface[] | undefined,
+    updated: mapInterface[] | arrInterface[] | shipInterface[] | undefined
   ) => {
     return JSON.stringify(updated) !== JSON.stringify(original);
   };

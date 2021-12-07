@@ -1,7 +1,8 @@
-import { Section } from "../../css/game.style";
-import { GameOverSpacer, Modal } from "../css/gameOver.style";
 import { mapInterface } from "../../service/boardCreator/interface";
+import { GameOverSpacer, Modal } from "../css/gameOver.style";
 import { shipInterface } from "../../service/ships/interface";
+
+import { Section } from "../../css/game.style";
 
 interface OverProps {
   enemyBoardData: mapInterface[];

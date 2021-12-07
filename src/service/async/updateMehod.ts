@@ -1,9 +1,23 @@
 import { mapInterface } from "./../boardCreator/interface/index";
 import { shipInterface } from "./../ships/interface/index";
 
+type droppedShipInterface = {
+  name: string;
+  position: number[];
+};
+
+interface droppedBoxShipsInterface {
+  name: shipInterface;
+  position: number[];
+  length: number;
+}
+
 class UpdateMethod {
   Update = (
-    name: { name: string; position: number[] },
+    name:
+      | { name: string; position: number[] }
+      | droppedBoxShipsInterface
+      | droppedShipInterface,
     correctShips: shipInterface[],
     el: mapInterface
   ) => {
@@ -16,11 +30,7 @@ class UpdateMethod {
     selectedBoat: { name: string; position: number[] }[],
     boardData: mapInterface[],
     correctShips: shipInterface[],
-    uniqueShipsOptions: {
-      name: shipInterface;
-      position: number[];
-      length: number;
-    }[]
+    uniqueShipsOptions: droppedBoxShipsInterface[] | droppedShipInterface[]
   ) => {
     const [AirCraft, BattleShip, Cruiser, Carrier, Submarine] = selectedBoat;
 
@@ -58,19 +68,19 @@ class UpdateMethod {
         return this.Update(Carrier, correctShips, el);
 
       if (data && data[0]?.position.includes(ids))
-        return this.Update(data[0] as any, correctShips, el);
+        return this.Update(data[0], correctShips, el);
 
       if (data && data[1]?.position.includes(ids))
-        return this.Update(data[1] as any, correctShips, el);
+        return this.Update(data[1], correctShips, el);
 
       if (data && data[2]?.position.includes(ids))
-        return this.Update(data[2] as any, correctShips, el);
+        return this.Update(data[2], correctShips, el);
 
       if (data && data[3]?.position.includes(ids))
-        return this.Update(data[3] as any, correctShips, el);
+        return this.Update(data[3], correctShips, el);
 
       if (data && data[4]?.position.includes(ids))
-        return this.Update(data[4] as any, correctShips, el);
+        return this.Update(data[4], correctShips, el);
 
       return el;
     });

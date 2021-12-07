@@ -46,13 +46,12 @@ const AsyncComponet = (props: asyncInterface) => {
       selectedBoat,
       boardData,
       correct,
-      droppedShips as any
+      droppedShips
     );
 
-    if (service.boardMoved(boardData, update as any)) setBoard(update as any);
+    if (service.boardMoved(boardData, update)) setBoard(update);
 
-    if (service.boardMoved(shipData as any, correctShips as any))
-      setShip(correctShips);
+    if (service.boardMoved(shipData, correctShips)) setShip(correctShips);
   }, [boardData, setBoard, setShip, shipData, shipsData, state]);
 
   useEffect(() => {
@@ -89,8 +88,8 @@ const AsyncComponet = (props: asyncInterface) => {
       uniqueShipsOptions
     );
 
-    if (service.boardMoved(boardData, update as any)) {
-      setBoard(update as any);
+    if (service.boardMoved(boardData, update)) {
+      setBoard(update);
       setShip(shipPanel);
     }
   }, [boardData, setBoard, setShip, shipData, shipsData, state]);

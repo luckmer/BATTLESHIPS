@@ -1,11 +1,12 @@
 import { Fragment, useState, useContext, useEffect } from "react";
-import { ShipGrid, Ship } from "../../css/game.style";
-import { boardsInterface } from "../../pages/interface";
 import { GameDiv, GameButton, Button } from "../../css/game.style";
-import { AppContext } from "../../store/store";
+import { boardsInterface } from "../../pages/interface";
+import { ShipGrid, Ship } from "../../css/game.style";
 import { AiOutlineArrowRight } from "react-icons/ai";
-import { ButtonPanel } from "../index";
 import { shipsPropsInterface } from "./interface";
+import { AppContext } from "../../store/store";
+import { ButtonPanel } from "../index";
+
 import * as Dec from "../css/ships.style";
 
 const Ships = ({ props }: { props: shipsPropsInterface }) => {

@@ -54,7 +54,7 @@ type typesPayload = {
   [Types.Set_Unclick_Boats]: { setBoats: [] };
   [Types.Set_Update_Curent_Move]: {
     updateCurrentMove: {
-      name: shipInterface;
+      name: shipInterface | string | any;
       position: number[];
       length: number;
     };

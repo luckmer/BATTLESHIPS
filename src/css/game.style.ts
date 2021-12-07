@@ -7,7 +7,7 @@ export const Ship = styled.div<Props>`
   width: ${({ size }) => `calc(4.6vmin * ${size})`};
   height: calc(4.6vmin * 1);
   border-radius: 2.3vmin;
-  background: ${({ setupColor }) => `${setupColor ? "orange" : "#678983"} `};
+  background: ${({ setupColor }) => `${setupColor ? "orange" : "#fff"} `};
   transition: 0.3s linear;
 
   cursor: pointer;
