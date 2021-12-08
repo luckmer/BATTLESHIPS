@@ -1,17 +1,24 @@
 import { useState, useContext, Fragment } from "react";
 
-import GenerateEnemyBoard from "../service/boardCreator/enemyBoard";
-import GenerateBoard from "../service/boardCreator/board";
-import ShipPanel from "../service/ships/shipPanel";
-import ComputerGame from "../components/computer/computerGame";
-import Enemy from "../service/ai/EnemyCreator";
-import AsyncComponet from "../service/async";
-import { SideMenu } from "../components/index";
 import { DragAndDropShip, PlayerDragAndDrop } from "../service/dragAndDrop";
 import { Section, Rotate } from "../css/game.style";
+import { SideMenu } from "../components/index";
 import { AppContext } from "../store/store";
-import { GameOverPanel, PlayerBoard, Ships } from "../components/index";
 import { Types } from "../store/types";
+
+import GenerateEnemyBoard from "../service/boardCreator/enemyBoard";
+import ComputerGame from "../components/computer/computerGame";
+import GenerateBoard from "../service/boardCreator/board";
+import ShipPanel from "../service/ships/shipPanel";
+import Enemy from "../service/ai/EnemyCreator";
+import AsyncComponet from "../service/async";
+
+import {
+  GameOverPanel,
+  PlayerBoard,
+  FooterMenu,
+  Ships
+} from "../components/index";
 
 const Game = () => {
   const [currentPlayer, setCurrentPlayer] = useState("right");
@@ -86,6 +93,7 @@ const Game = () => {
   ) : (
     <Fragment>
       <SideMenu />
+      <FooterMenu props={ShipsProps} />
       <Section>
         <Rotate>
           <PlayerBoard
