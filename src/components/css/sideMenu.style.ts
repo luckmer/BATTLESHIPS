@@ -51,6 +51,10 @@ export const Section = styled.section<{ gameOn: boolean }>`
 `;
 
 export const Clicker = styled.div`
+  @media screen and (max-width: 772px) {
+    display: none;
+  }
+
   width: 70px;
   height: 45px;
   border-top-right-radius: 10px;
@@ -75,6 +79,11 @@ export const Clicker = styled.div`
 `;
 
 export const SideMenuPanel = styled.section<{ open: boolean; gameOn: boolean }>`
+  // @media screen and (max-width: 772px) {
+  //   display: none;
+  // }
+
+  z-index: 4000;
   position: absolute;
   height: 100%;
   width: 200px;
