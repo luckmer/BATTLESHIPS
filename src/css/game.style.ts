@@ -20,8 +20,11 @@ export const Ship = styled.div<Props>`
     width: 100%;
   }
 
-  &:hover {
-    background: ${({ setupColor }) => `${setupColor ? "#181D31" : "#E6DDC4"} `};
+  @media screen and (min-width: 772px) {
+    &:hover {
+      background: ${({ setupColor }) =>
+        `${setupColor ? "#181D31" : "#E6DDC4"} `};
+    }
   }
 `;
 
@@ -29,7 +32,7 @@ export const ShipGrid = styled.div<any>`
   transform: rotate(${({ status }) => (status ? "90deg" : "0deg")});
   z-index: 999;
   height: calc(
-    ${({ size, status }) => (status ? `4.6vmin *${size}` : `4.6vmin`)}
+    ${({ size, status }) => (status ? `2vmin * ${size}` : `4.6vmin`)}
   );
   margin: 40px 0 40px 0;
   display: flex;
