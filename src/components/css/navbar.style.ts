@@ -18,6 +18,12 @@ export const Section = styled.section`
   color: white;
   font-family: "Shippori Antique", sans-serif;
   text-transform: uppercase;
+
+  a {
+    text-decoration: none;
+    list-style: none;
+    color: #fff;
+  }
 `;
 
 export const H1 = styled.h1`

@@ -87,8 +87,9 @@ export const SideMenuPanel = styled.section<{ open: boolean; gameOn: boolean }>`
   position: absolute;
   height: 100%;
   width: 200px;
-  transition: all 0.5s;
   left: ${({ open }) => (open ? "0" : "-100%")};
+
+  transition: all 0.5s;
   background: #0868cf;
   z-index: 1000;
   padding-right: 20px;
