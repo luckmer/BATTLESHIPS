@@ -1,5 +1,6 @@
+import { mapInterface } from "../../../service/boardCreator/interface";
 import { shipInterface } from "../../../service/ships/interface";
-import { InitialStateType } from "../../../store/interface";
+import { InitialStateType, actionsPayload } from "../../../store/interface";
 
 export interface shipsPropsInterface {
   shipData: shipInterface[];
@@ -10,4 +11,8 @@ export interface shipsPropsInterface {
   handleRotateShip: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleMouseOver: (el: number) => void;
   handleStartGame: () => void;
+  boardData: mapInterface[];
+  dispatch: React.Dispatch<actionsPayload>;
+  setBoard: React.Dispatch<React.SetStateAction<mapInterface[]>>;
+  setShip: React.Dispatch<React.SetStateAction<shipInterface[]>>;
 }
