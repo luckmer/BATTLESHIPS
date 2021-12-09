@@ -1,4 +1,6 @@
+export { default as FooterAttack } from "../components/footerMenu/FooterAttack";
 export { default as NoteInformation } from "./notifications/NoteInformation";
+export { default as FooterHistory } from "./footerMenu/FooterHistory";
 export { default as PlayerBoard } from "./PlayerBoard/PlayerBoard";
 export { default as ButtonPanel } from "./buttonPanel/ButtonPanel";
 export { default as FooterMenu } from "./footerMenu/FooterMenu";

@@ -1,7 +1,6 @@
 import { mapInterface } from "../../service/boardCreator/interface";
 import { GameOverSpacer, Modal } from "../css/gameOver.style";
 import { shipInterface } from "../../service/ships/interface";
-
 import { Section } from "../../css/game.style";
 
 interface OverProps {
@@ -29,7 +28,9 @@ const GameOverPanel = (props: OverProps) => {
             You have sunk all ships with <br />
             <strong>accuracy {~~displayAccuracy}%</strong>
           </p>
-          <button> Home </button>
+          <button>
+            <a href="/">Home</a>
+          </button>
         </GameOverSpacer>
       </Modal>
     </Section>
