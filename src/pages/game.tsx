@@ -1,8 +1,8 @@
 import { useState, useContext, Fragment } from "react";
 
 import { DragAndDropShip, PlayerDragAndDrop } from "../service/dragAndDrop";
-import { Section, Rotate } from "../css/game.style";
-import { SideMenu } from "../components/index";
+import { Section, Rotate, FooterSlicer } from "../css/game.style";
+import { FooterHistory, SideMenu } from "../components/index";
 import { AppContext } from "../store/store";
 import { Types } from "../store/types";
 
@@ -17,6 +17,7 @@ import {
   GameOverPanel,
   PlayerBoard,
   FooterMenu,
+  FooterAttack,
   Ships
 } from "../components/index";
 
@@ -37,7 +38,8 @@ const Game = () => {
     shipsData,
     enemyBoardData,
     currentPlayer,
-    setCurrentPlayer
+    setCurrentPlayer,
+    setEnemyBoard
   };
 
   const { handleDragStartShip, handleDropShip, handleRotateShip } =
@@ -58,6 +60,7 @@ const Game = () => {
   const handleShipAttack = (id: number) => {
     if (currentPlayer === "left") return;
 
+    console.log(id);
     const findFire = enemyBoardData.find((el) => el.id === id);
     const findShips = enemyBoardData
       .filter((el) => el.used === true)
@@ -93,7 +96,11 @@ const Game = () => {
   ) : (
     <Fragment>
       <SideMenu />
-      <FooterMenu props={ShipsProps} />
+      <FooterSlicer>
+        <FooterMenu props={ShipsProps} />
+        <FooterHistory props={ShipsProps} />
+        <FooterAttack props={ShipsProps} handleShipAttack={handleShipAttack} />
+      </FooterSlicer>
       <Section>
         <Rotate>
           <PlayerBoard

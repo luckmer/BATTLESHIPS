@@ -1,25 +1,11 @@
 import { useEffect, useContext } from "react";
-import { ToastContainer, toast } from "react-toastify";
 import { injectStyle } from "react-toastify/dist/inject-style";
+import { PropsInterface } from "./interface/arrInterface";
+import { ToastContainer, toast } from "react-toastify";
 import { AppContext } from "../../store/store";
 import { Types } from "../../store/types";
 
-interface arrInterface {
-  attacked: number[];
-  name: string;
-  size: string | number;
-}
-
-interface PropsInterface {
-  notification: {
-    status: boolean;
-    response: string;
-  };
-  destroyedBoats: {
-    player: arrInterface[] | undefined;
-    ai: arrInterface[] | undefined;
-  };
-}
+import boatDestructionDetection from "./service/index";
 
 const NoteInformation = (props: PropsInterface) => {
   const { dispatch } = useContext(AppContext);
@@ -30,27 +16,31 @@ const NoteInformation = (props: PropsInterface) => {
   const response = notification.response;
 
   useEffect(() => {
-    if (ai?.length) {
+    const destroyedShip = boatDestructionDetection.generateChecker(ai);
+
+    if (destroyedShip?.length) {
       if (typeof window !== "undefined") injectStyle();
-      const sortedElement = ai.sort();
+      const sortedElement = destroyedShip.sort();
       const lastElement = sortedElement.slice(-1).shift()?.name;
 
       toast.warn(`the enemy sunk your ${lastElement}`);
     }
 
-    if (ai?.length === 20)
+    if (destroyedShip?.length === 5)
       dispatch({ type: Types.Set_Game_Over, payload: { player: "ai" } });
   }, [ai, dispatch]);
 
   useEffect(() => {
-    if (player?.length) {
+    const destroyedShip = boatDestructionDetection.generateChecker(player);
+
+    if (destroyedShip?.length) {
       if (typeof window !== "undefined") injectStyle();
-      const sortedElement = player.sort();
+      const sortedElement = destroyedShip.sort();
       const lastElement = sortedElement.slice(-1).shift()?.name;
       toast.success(`You sunk the ${lastElement}`);
     }
 
-    if (player?.length === 20)
+    if (destroyedShip?.length === 5)
       dispatch({ type: Types.Set_Game_Over, payload: { player: "player" } });
   }, [player, dispatch]);
 

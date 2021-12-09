@@ -6,12 +6,16 @@ const NavBar = () => {
     <Nav>
       <Section>
         <div>
-          <H1>BATTLESHIP</H1>
+          <a href="/game">
+            <H1>BATTLESHIP</H1>
+          </a>
         </div>
         <div>
-          <H1>
-            <AiOutlineHome />
-          </H1>
+          <a href="/">
+            <H1>
+              <AiOutlineHome />
+            </H1>
+          </a>
         </div>
       </Section>
     </Nav>
