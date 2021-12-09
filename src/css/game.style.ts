@@ -1,6 +1,14 @@
 import styled from "styled-components";
 import { Props } from "../pages/interface/index";
 
+export const FooterSlicer = styled.div`
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+`;
+
 export const Ship = styled.div<Props>`
   display: flex;
   margin: 1vmin;
@@ -44,6 +52,7 @@ export const Div = styled.div`
   margin: 2vmin;
   display: grid;
   background-color: hsl(200, 100%, 50%);
+
   grid-template-rows: repeat(10, 4.6vmin);
   grid-template-columns: repeat(10, 4.6vmin);
 `;
@@ -68,6 +77,9 @@ export const Grid = styled.div<Test>`
 export const Rotate = styled.div`
   display: flex;
   justify-content: center;
+  @media screen and (max-width: 772px) {
+    flex-direction: column;
+  }
 `;
 
 export const Section = styled.section`
@@ -75,8 +87,8 @@ export const Section = styled.section`
   flex-direction: column;
   justify-content: space-evenly;
   max-width: 1800px;
-  height: 100%;
   margin: 0 auto;
+  height: 100%;
 `;
 
 export const GameDiv = styled.div`
