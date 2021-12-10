@@ -14,7 +14,7 @@ const board = keyframes`
   }
 
   50%{
-    transform: scaleY(1.3);
+    transform: scale(1.6);
     opacity:0;
   }
 
@@ -153,32 +153,44 @@ export const DivBoat = styled.div<any>`
   justify-content: center;
   align-items: center;
 
-  border-top: 2px solid #ecb365;
-  border-bottom: 2px solid #ecb365;
+  border-top: ${({ boat, rotated }) =>
+    boat && !rotated ? `2px solid #ecb365` : ""};
+  border-bottom: ${({ boat, rotated }) =>
+    boat && !rotated ? `2px solid #ecb365` : ""};
+
+  border-left: ${({ boat, rotated }) =>
+    boat && rotated ? `2px solid #ecb365` : ""};
+  border-right: ${({ boat, rotated }) =>
+    boat && rotated ? `2px solid #ecb365` : ""};
+  z-index: 2;
   &:after {
     content: "";
-    border-top: ${({ boat }) => (boat ? `2px solid #fff` : "")};
-    border-bottom: ${({ boat }) => (boat ? `2px solid #fff` : "")};
+    border-top: ${({ boat, rotated }) =>
+      boat && !rotated ? `2px solid #fff` : ""};
+    border-bottom: ${({ boat, rotated }) =>
+      boat && !rotated ? `2px solid #fff` : ""};
+
+    border-left: ${({ boat, rotated }) =>
+      boat && rotated ? `2px solid #fff` : ""};
+    border-right: ${({ boat, rotated }) =>
+      boat && rotated ? `2px solid #fff` : ""};
+
     animation: ${board} 2s linear infinite;
 
-    border-top-left-radius: ${({ findStart, rotateStatus }) =>
-      findStart && !rotateStatus ? "20px" : "0px"};
-    border-bottom-left-radius: ${({ findStart, rotateStatus }) =>
-      findStart && !rotateStatus ? "20px" : "0px"};
-    border-top-right-radius: ${({ findEnd, rotateStatus }) =>
-      findEnd && !rotateStatus ? "20px" : "0px"};
-    border-bottom-right-radius: ${({ findEnd, rotateStatus }) =>
-      findEnd && !rotateStatus ? "20px" : "0px"};
+    border-top-right-radius: ${({ findEnd, rotated, findStart }) =>
+      (findEnd && !rotated) || (findStart && rotated) ? "20px" : "0px"};
+    border-top-left-radius: ${({ findStart }) => (findStart ? "20px" : "0px")};
+    border-bottom-right-radius: ${({ findEnd }) => (findEnd ? "20px" : "0px")};
+    border-bottom-left-radius: ${({ findEnd, rotated, findStart }) =>
+      (findEnd && rotated) || (findStart && !rotated) ? "20px" : "0px"};
   }
 
-  border-top-left-radius: ${({ findStart, rotateStatus }) =>
-    findStart && !rotateStatus ? "20px" : "0px"};
-  border-bottom-left-radius: ${({ findStart, rotateStatus }) =>
-    findStart && !rotateStatus ? "20px" : "0px"};
-  border-top-right-radius: ${({ findEnd, rotateStatus }) =>
-    findEnd && !rotateStatus ? "20px" : "0px"};
-  border-bottom-right-radius: ${({ findEnd, rotateStatus }) =>
-    findEnd && !rotateStatus ? "20px" : "0px"};
+  border-top-right-radius: ${({ findEnd, rotated, findStart }) =>
+    (findEnd && !rotated) || (findStart && rotated) ? "20px" : "0px"};
+  border-top-left-radius: ${({ findStart }) => (findStart ? "20px" : "0px")};
+  border-bottom-right-radius: ${({ findEnd }) => (findEnd ? "20px" : "0px")};
+  border-bottom-left-radius: ${({ findEnd, rotated, findStart }) =>
+    (findEnd && rotated) || (findStart && !rotated) ? "20px" : "0px"};
 
   border-spacing: 10px 5px;
   z-index: 1;
@@ -192,17 +204,19 @@ export const Grid = styled.div<any>`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2;
 
   border: ${({ boat, status }) =>
     boat && status === "player" ? "none" : " 1px solid hsla(0, 0%, 100%, 0.2)"};
 
   background-color: ${({ boat, opponent }) =>
     boat ? (opponent === "enemy" ? "" : "#064663") : ""};
+
+  border-top-right-radius: ${({ findEnd, rotated, findStart }) =>
+    (findEnd && !rotated) || (findStart && rotated) ? "20px" : "0px"};
   border-top-left-radius: ${({ findStart }) => (findStart ? "20px" : "0px")};
-  border-bottom-left-radius: ${({ findStart }) => (findStart ? "20px" : "0px")};
-  border-top-right-radius: ${({ findEnd }) => (findEnd ? "20px" : "0px")};
   border-bottom-right-radius: ${({ findEnd }) => (findEnd ? "20px" : "0px")};
+  border-bottom-left-radius: ${({ findEnd, rotated, findStart }) =>
+    (findEnd && rotated) || (findStart && !rotated) ? "20px" : "0px"};
 
   &:hover {
     background-color: #0868cf;

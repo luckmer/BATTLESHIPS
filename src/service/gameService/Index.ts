@@ -5,7 +5,8 @@ class Service {
   Response = (
     boardData: mapInterface[],
     shipLocation: number[],
-    ship: shipInterface
+    ship: shipInterface,
+    rotateStatus?: boolean
   ) => {
     return boardData.map((el) => {
       const id = Number(el.id);
@@ -18,8 +19,15 @@ class Service {
         const usedTester = usedPanel.some(({ used }) => used === true);
 
         if (!usedTester)
-          return { ...el, used: true, name: ship.name, opponent: el.name };
+          return {
+            ...el,
+            used: true,
+            name: ship.name,
+            opponent: el.name,
+            rotated: rotateStatus ? true : false
+          };
       }
+
       return el;
     });
   };

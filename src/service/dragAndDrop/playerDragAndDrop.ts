@@ -58,7 +58,12 @@ const PlayerDragAndDrop = (props: PropsInterface) => {
 
     if (!shipBlocker) return;
 
-    const update = service.Response(boardData, shipLocation, ship);
+    const update = service.Response(
+      boardData,
+      shipLocation,
+      ship,
+      rotateStatus
+    );
 
     setBoard(update);
 

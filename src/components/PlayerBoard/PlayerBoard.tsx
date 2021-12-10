@@ -25,12 +25,14 @@ const PlayerBoard = (props: PlayerBoardProps) => {
             id,
             used,
             attack,
-            name
+            name,
+            rotated
           }: {
             attack: boolean;
             name?: string;
             id: number;
             used: string | boolean;
+            rotated?: boolean;
           },
           i
         ) => {
@@ -40,9 +42,9 @@ const PlayerBoard = (props: PlayerBoardProps) => {
 
           return (
             <Grid
+              rotated={rotated}
               id={String(i + 1)}
               key={id}
-              rotateStatus={rotateStatus}
               findStart={findStart}
               findEnd={findEnd}
               onDragOver={(e: React.DragEvent<HTMLDivElement>) =>
@@ -58,9 +60,9 @@ const PlayerBoard = (props: PlayerBoardProps) => {
               <Fragment>
                 <DivBoat
                   boat={used}
-                  rotateStatus={rotateStatus}
                   findStart={findStart}
                   findEnd={findEnd}
+                  rotated={rotated}
                 >
                   <RedDot
                     attack={attack}
