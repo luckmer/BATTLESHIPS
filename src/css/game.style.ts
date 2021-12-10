@@ -1,5 +1,65 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Props } from "../pages/interface/index";
+
+const board = keyframes`
+
+0%{
+  width: 100%;
+  height: 100%;
+  opacity:0.1;
+  }
+
+  20%{
+    opacity:1;
+  }
+
+  50%{
+    transform: scaleY(1.3);
+    opacity:0;
+  }
+
+
+
+  100%{
+    opacity:0;
+    width: 100%;
+    height: 100%;
+  }
+
+
+`;
+
+const hit = keyframes`
+
+0% {
+  opacity: 1;
+  transform: scale(0);
+}
+
+100% {
+  opacity: 0;
+  transform: scale(3);
+  width:0px;
+  height:0px;
+  display:none;
+
+}
+`;
+
+const waterCollision = keyframes`
+  0%{
+    transform: scale(1);
+  }
+
+
+  50%{
+    transform: scale(1.2);
+  }
+
+  100%{
+    transform: scale(1);
+  }
+`;
 
 export const FooterSlicer = styled.div`
   bottom: 0;
@@ -9,12 +69,43 @@ export const FooterSlicer = styled.div`
   flex-direction: row;
 `;
 
+export const RedDot = styled.section<{
+  attack: boolean;
+  shipDetected?: boolean;
+  color?: string;
+}>`
+  width: 2vmin;
+  height: 2vmin;
+  position: absolute;
+  border-radius: 100px;
+  background-color: ${({ shipDetected, attack }) =>
+    attack && shipDetected ? "red" : "#ECB365"};
+
+  animation: ${waterCollision} 1s linear forwards;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.5s;
+  display: ${({ attack }) => (attack ? "block" : "none")};
+  z-index: 1;
+
+  &:before {
+    content: "";
+    position: absolute;
+    animation: ${hit} 0.5s linear forwards;
+    border: ${({ attack, shipDetected }) =>
+      attack && shipDetected ? "1vmin solid red" : "1vmin solid white"};
+    border-radius: 100%;
+  }
+`;
+
 export const Ship = styled.div<Props>`
   display: flex;
   margin: 1vmin;
   width: ${({ size }) => `calc(4.6vmin * ${size})`};
   height: calc(4.6vmin * 1);
   border-radius: 2.3vmin;
+
   background: ${({ setupColor }) => `${setupColor ? "orange" : "#fff"} `};
   transition: 0.3s linear;
 
@@ -42,6 +133,7 @@ export const ShipGrid = styled.div<any>`
   height: calc(
     ${({ size, status }) => (status ? `2vmin * ${size}` : `4.6vmin`)}
   );
+
   margin: 40px 0 40px 0;
   display: flex;
   align-items: center;
@@ -57,17 +149,60 @@ export const Div = styled.div`
   grid-template-columns: repeat(10, 4.6vmin);
 `;
 
-interface Test {
-  boat: string | boolean | undefined;
-  attack?: string | boolean | undefined;
-}
+export const DivBoat = styled.div<any>`
+  justify-content: center;
+  align-items: center;
 
-export const Grid = styled.div<Test>`
-  border: 1px solid hsla(0, 0%, 100%, 0.2);
-  transition: all 0.2s;
+  border-top: 2px solid #ecb365;
+  border-bottom: 2px solid #ecb365;
+  &:after {
+    content: "";
+    border-top: ${({ boat }) => (boat ? `2px solid #fff` : "")};
+    border-bottom: ${({ boat }) => (boat ? `2px solid #fff` : "")};
+    animation: ${board} 2s linear infinite;
 
-  background-color: ${({ boat, attack }) =>
-    attack ? "red" : boat ? "grey" : ""};
+    border-top-left-radius: ${({ findStart, rotateStatus }) =>
+      findStart && !rotateStatus ? "20px" : "0px"};
+    border-bottom-left-radius: ${({ findStart, rotateStatus }) =>
+      findStart && !rotateStatus ? "20px" : "0px"};
+    border-top-right-radius: ${({ findEnd, rotateStatus }) =>
+      findEnd && !rotateStatus ? "20px" : "0px"};
+    border-bottom-right-radius: ${({ findEnd, rotateStatus }) =>
+      findEnd && !rotateStatus ? "20px" : "0px"};
+  }
+
+  border-top-left-radius: ${({ findStart, rotateStatus }) =>
+    findStart && !rotateStatus ? "20px" : "0px"};
+  border-bottom-left-radius: ${({ findStart, rotateStatus }) =>
+    findStart && !rotateStatus ? "20px" : "0px"};
+  border-top-right-radius: ${({ findEnd, rotateStatus }) =>
+    findEnd && !rotateStatus ? "20px" : "0px"};
+  border-bottom-right-radius: ${({ findEnd, rotateStatus }) =>
+    findEnd && !rotateStatus ? "20px" : "0px"};
+
+  border-spacing: 10px 5px;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+
+  display: ${({ boat }) => (boat ? "flex" : "none")};
+`;
+
+export const Grid = styled.div<any>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+
+  border: ${({ boat, status }) =>
+    boat && status === "player" ? "none" : " 1px solid hsla(0, 0%, 100%, 0.2)"};
+
+  background-color: ${({ boat, opponent }) =>
+    boat ? (opponent === "enemy" ? "" : "#064663") : ""};
+  border-top-left-radius: ${({ findStart }) => (findStart ? "20px" : "0px")};
+  border-bottom-left-radius: ${({ findStart }) => (findStart ? "20px" : "0px")};
+  border-top-right-radius: ${({ findEnd }) => (findEnd ? "20px" : "0px")};
+  border-bottom-right-radius: ${({ findEnd }) => (findEnd ? "20px" : "0px")};
 
   &:hover {
     background-color: #0868cf;

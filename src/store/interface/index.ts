@@ -83,6 +83,7 @@ export type InitialStateType = {
       length: any;
     }[];
   };
+  boatHits: number[];
 };
 
 interface arrInterface {

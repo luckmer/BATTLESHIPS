@@ -24,10 +24,13 @@ const AiShipDestroyer = (
   const randomAttack = randomPozition ? randomPozition : findAttack;
 
   const update = boardData.map((el) => {
-    if (el.id === randomAttack?.id) return { ...el, attack: true };
+    if (el.id === randomAttack?.id) return { ...el, attack: true, miss: true };
 
     if (el.name === randomAttack?.name)
       return { ...el, attacked: [...el.attacked, randomAttack?.id] };
+
+    if (el.name === "enemy") return { ...el, miss: true };
+    if (el.name !== "enemy") return { ...el, miss: false, missed: false };
 
     return el;
   });

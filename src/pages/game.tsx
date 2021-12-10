@@ -60,7 +60,6 @@ const Game = () => {
   const handleShipAttack = (id: number) => {
     if (currentPlayer === "left") return;
 
-    console.log(id);
     const findFire = enemyBoardData.find((el) => el.id === id);
     const findShips = enemyBoardData
       .filter((el) => el.used === true)
@@ -69,9 +68,12 @@ const Game = () => {
     if (!findFire || !findShips || findFire?.attack) return;
 
     const update = enemyBoardData.map((el) => {
-      if (el.id === findFire.id) return { ...el, attack: true };
+      if (el.id === findFire.id) return { ...el, attack: true, miss: true };
       if (el.name === findFire.name)
         return { ...el, attacked: [...el.attacked, findFire.id] };
+
+      if (el.name === "enemy") return { ...el, miss: true };
+      if (el.name !== "enemy") return { ...el, miss: false };
       return el;
     });
 
@@ -104,6 +106,7 @@ const Game = () => {
       <Section>
         <Rotate>
           <PlayerBoard
+            state={state}
             boardData={boardData}
             handleDragOver={handleDragOver}
             handleDropPlayer={handleDropPlayer}

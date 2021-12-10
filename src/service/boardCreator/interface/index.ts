@@ -7,6 +7,7 @@ export interface mapInterface {
   enemyUsed: boolean;
   attacked: number[];
   attack: boolean;
+  miss?: boolean;
 }
 
 export interface arrInterface {

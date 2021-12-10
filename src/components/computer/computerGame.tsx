@@ -1,5 +1,6 @@
 import { mapInterface } from "../../service/boardCreator/interface";
-import { Div, Grid } from "../../css/game.style";
+import { Div, Grid, RedDot } from "../../css/game.style";
+import { Fragment } from "react";
 
 interface propsInterface {
   shipData: mapInterface[];
@@ -15,20 +16,32 @@ const ComputerGame = (props: propsInterface) => {
         ({
           id,
           used,
-          attack
+          attack,
+          opponent,
+          name
         }: {
           attack: boolean;
           id: number;
           used: boolean;
+          name?: string;
+          opponent?: string;
         }) => {
+          const test = name !== "enemy" && attack;
+
           return (
             <Grid
               key={id}
               boat={used}
+              opponent={opponent}
               attack={attack}
               id={String(id)}
               onClick={() => props.handleShipAttack(id)}
-            />
+            >
+              <Fragment>
+                <RedDot attack={attack} shipDetected={test} color="#ECB365" />
+                {!test && <RedDot attack={attack} />}
+              </Fragment>
+            </Grid>
           );
         }
       )}
