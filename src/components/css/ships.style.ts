@@ -35,6 +35,14 @@ export const Clicker = styled.div`
   }
 `;
 
+export const SideDivContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 40px 0 120px 0;
+  height: auto;
+`;
+
 export const SideShipPanel = styled.div<{ open: boolean; gameOn: boolean }>`
   @media screen and (max-width: 772px) {
     display: none;

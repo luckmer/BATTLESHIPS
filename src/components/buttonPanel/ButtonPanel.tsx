@@ -1,3 +1,6 @@
+import { isEqual } from "lodash";
+import { memo } from "react";
+
 import { GameDiv, GameButton, Button } from "../../css/game.style";
 
 interface ButtonProps {
@@ -10,10 +13,12 @@ const ButtonPanel = (props: ButtonProps) => {
   return (
     <GameDiv>
       <GameButton>
-        <Button onClick={handleStartGame}>Start Game</Button>
+        <Button onClick={handleStartGame} role="dialog">
+          Start Game
+        </Button>
       </GameButton>
     </GameDiv>
   );
 };
 
-export default ButtonPanel;
+export default memo(ButtonPanel, isEqual);

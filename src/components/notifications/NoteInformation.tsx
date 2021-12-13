@@ -4,11 +4,13 @@ import { PropsInterface } from "./interface/arrInterface";
 import { ToastContainer, toast } from "react-toastify";
 import { AppContext } from "../../store/store";
 import { Types } from "../../store/types";
+import ObjData from "./service/index";
 
-import boatDestructionDetection from "./service/index";
+const boardMoved = (original: any, updated: any) =>
+  JSON.stringify(updated) !== JSON.stringify(original);
 
 const NoteInformation = (props: PropsInterface) => {
-  const { dispatch } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
 
   const { notification, destroyedBoats } = props;
   const { player, ai } = destroyedBoats;
@@ -16,33 +18,45 @@ const NoteInformation = (props: PropsInterface) => {
   const response = notification.response;
 
   useEffect(() => {
-    const destroyedShip = boatDestructionDetection.generateChecker(ai);
+    const { obj, lives } = ObjData(ai);
 
-    if (destroyedShip?.length) {
-      if (typeof window !== "undefined") injectStyle();
-      const sortedElement = destroyedShip.sort();
-      const lastElement = sortedElement.slice(-1).shift()?.name;
+    for (let key in obj) {
+      const char = lives[key];
 
-      toast.warn(`the enemy sunk your ${lastElement}`);
+      if (char === obj[key]) {
+        if (!state.boatHits.includes(key)) {
+          toast.warn(`the enemy sunk your ${key} `);
+
+          if (boardMoved([key], state.boatHits)) {
+            dispatch({ type: Types.Enemy_Sunk_Ship, payload: key });
+          }
+        }
+      }
     }
 
-    if (destroyedShip?.length === 5)
+    if (state.boatHits.length === 5)
       dispatch({ type: Types.Set_Game_Over, payload: { player: "ai" } });
-  }, [ai, dispatch]);
+  }, [ai, dispatch, state]);
 
   useEffect(() => {
-    const destroyedShip = boatDestructionDetection.generateChecker(player);
+    const { obj, lives } = ObjData(player);
 
-    if (destroyedShip?.length) {
-      if (typeof window !== "undefined") injectStyle();
-      const sortedElement = destroyedShip.sort();
-      const lastElement = sortedElement.slice(-1).shift()?.name;
-      toast.success(`You sunk the ${lastElement}`);
+    for (let key in obj) {
+      const char = lives[key];
+
+      if (char === obj[key]) {
+        if (!state.playerBoatHits.includes(key)) {
+          toast.success(`You sunk the ${key} `);
+          if (boardMoved([key], state.playerBoatHits)) {
+            dispatch({ type: Types.Player_Sunk_Ship, payload: key });
+          }
+        }
+      }
     }
 
-    if (destroyedShip?.length === 5)
+    if (state.playerBoatHits.length === 5)
       dispatch({ type: Types.Set_Game_Over, payload: { player: "player" } });
-  }, [player, dispatch]);
+  }, [player, dispatch, state]);
 
   useEffect(() => {
     if (!response) return;

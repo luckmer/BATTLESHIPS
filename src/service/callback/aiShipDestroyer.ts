@@ -23,11 +23,10 @@ const AiShipDestroyer = (
 
   const randomAttack = randomPozition ? randomPozition : findAttack;
 
-  const update = boardData.map((el) => {
-    if (el.id === randomAttack?.id) return { ...el, attack: true, miss: true };
+  if (!randomAttack) return;
 
-    if (el.name === randomAttack?.name)
-      return { ...el, attacked: [...el.attacked, randomAttack?.id] };
+  const update = boardData.map((el) => {
+    if (el.id === randomAttack.id) return { ...el, attack: true, miss: true };
 
     if (el.name === "enemy") return { ...el, miss: true };
     if (el.name !== "enemy") return { ...el, miss: false, missed: false };
@@ -35,8 +34,15 @@ const AiShipDestroyer = (
     return el;
   });
 
-  if (service.boardMoved(boardData, update)) setBoard(update);
-  const playerDestroyedBoats = shipGenerator.generateBoats(update);
+  const updateTest = update.map((el) => {
+    if (el.id === randomAttack.id && el.name === randomAttack.name)
+      return { ...el, attacked: [...el.attacked, randomAttack?.id] };
+
+    return el;
+  });
+
+  if (service.boardMoved(boardData, updateTest)) setBoard(updateTest);
+  const playerDestroyedBoats = shipGenerator.generateBoats(updateTest);
 
   if (service.boardMoved(playerDestroyedBoats, state.destroyedBoats.ai)) {
     return callback(playerDestroyedBoats);

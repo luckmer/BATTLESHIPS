@@ -1,6 +1,7 @@
+import { memo } from "react";
 import { ShipsHeaderContainer, ShipsHeader } from "../../css/FooterMenu.style";
 
-export const HeaderCreator = ({ name }: { name: string }) => {
+export const HeaderCreator = memo(({ name }: { name: string }) => {
   return (
     <ShipsHeaderContainer>
       <ShipsHeader>
@@ -8,4 +9,4 @@ export const HeaderCreator = ({ name }: { name: string }) => {
       </ShipsHeader>
     </ShipsHeaderContainer>
   );
-};
+});

@@ -1,6 +1,6 @@
 import { mapInterface } from "../../service/boardCreator/interface";
 import { Div, Grid, RedDot } from "../../css/game.style";
-import { Fragment } from "react";
+import { Fragment, memo, useCallback } from "react";
 
 interface propsInterface {
   shipData: mapInterface[];
@@ -8,10 +8,15 @@ interface propsInterface {
 }
 
 const ComputerGame = (props: propsInterface) => {
-  const { shipData }: propsInterface = props;
+  const { shipData, handleShipAttack }: propsInterface = props;
+
+  const ClickTest = useCallback(
+    (id) => handleShipAttack(id),
+    [handleShipAttack]
+  );
 
   return (
-    <Div>
+    <Div role="dialog">
       {shipData.map(
         ({
           id,
@@ -35,7 +40,7 @@ const ComputerGame = (props: propsInterface) => {
               opponent={opponent}
               attack={attack}
               id={String(id)}
-              onClick={() => props.handleShipAttack(id)}
+              onClick={() => ClickTest(id)}
             >
               <Fragment>
                 <RedDot attack={attack} shipDetected={test} color="#ECB365" />
@@ -49,4 +54,4 @@ const ComputerGame = (props: propsInterface) => {
   );
 };
 
-export default ComputerGame;
+export default memo(ComputerGame);

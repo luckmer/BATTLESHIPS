@@ -1,8 +1,9 @@
-import { Fragment } from "react";
+import { Fragment, memo } from "react";
 import { mapInterface } from "../../service/boardCreator/interface";
 import { Div, Grid, RedDot, DivBoat } from "../../css/game.style";
 import { InitialStateType } from "../../store/interface";
 import { BoatEndStartGenerator } from "./ShipDeconstructor";
+import { isEqual } from "lodash";
 
 interface PlayerBoardProps {
   boardData: mapInterface[];
@@ -14,8 +15,6 @@ interface PlayerBoardProps {
 const PlayerBoard = (props: PlayerBoardProps) => {
   const { handleDragOver, boardData, handleDropPlayer, state } = props;
   const [idsStart, idsEnd] = BoatEndStartGenerator(state);
-
-  const rotateStatus = state.rotateStatus;
 
   return (
     <Div>
@@ -80,4 +79,4 @@ const PlayerBoard = (props: PlayerBoardProps) => {
   );
 };
 
-export default PlayerBoard;
+export default memo(PlayerBoard, isEqual);

@@ -1,4 +1,4 @@
-import { useState, useContext, Fragment } from "react";
+import { useState, useContext, Fragment, memo, useCallback } from "react";
 
 import { DragAndDropShip, PlayerDragAndDrop } from "../service/dragAndDrop";
 import { Section, Rotate, FooterSlicer } from "../css/game.style";
@@ -20,6 +20,7 @@ import {
   FooterAttack,
   Ships
 } from "../components/index";
+import { isEqual } from "lodash";
 
 const Game = () => {
   const [currentPlayer, setCurrentPlayer] = useState("right");
@@ -57,29 +58,32 @@ const Game = () => {
     dispatch({ type: Types.Set_Game_On, payload: true });
   };
 
-  const handleShipAttack = (id: number) => {
-    if (currentPlayer === "left") return;
+  const handleShipAttack = useCallback(
+    (id: number) => {
+      if (currentPlayer === "left") return;
 
-    const findFire = enemyBoardData.find((el) => el.id === id);
-    const findShips = enemyBoardData
-      .filter((el) => el.used === true)
-      .map((_, i) => i).length;
+      const findFire = enemyBoardData.find((el) => el.id === id);
+      const findShips = enemyBoardData
+        .filter((el) => el.used === true)
+        .map((_, i) => i).length;
 
-    if (!findFire || !findShips || findFire?.attack) return;
+      if (!findFire || !findShips || findFire?.attack) return;
 
-    const update = enemyBoardData.map((el) => {
-      if (el.id === findFire.id) return { ...el, attack: true, miss: true };
-      if (el.name === findFire.name)
-        return { ...el, attacked: [...el.attacked, findFire.id] };
+      const update = enemyBoardData.map((el) => {
+        if (el.id === findFire.id) return { ...el, attack: true, miss: true };
+        if (el.name === findFire.name)
+          return { ...el, attacked: [...el.attacked, findFire.id] };
 
-      if (el.name === "enemy") return { ...el, miss: true };
-      if (el.name !== "enemy") return { ...el, miss: false };
-      return el;
-    });
+        if (el.name === "enemy") return { ...el, miss: true };
+        if (el.name !== "enemy") return { ...el, miss: false };
+        return el;
+      });
 
-    setCurrentPlayer("left");
-    setEnemyBoard(update);
-  };
+      setCurrentPlayer("left");
+      setEnemyBoard(update);
+    },
+    [currentPlayer, enemyBoardData, setEnemyBoard]
+  );
 
   const ShipsProps = {
     ...PROPS,
@@ -122,4 +126,4 @@ const Game = () => {
   );
 };
 
-export default Game;
+export default memo(Game, isEqual);

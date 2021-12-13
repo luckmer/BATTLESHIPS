@@ -9,6 +9,7 @@ import {
   Input,
   FormButton
 } from "../../css/FooterMenu.style";
+import { memo } from "react";
 
 interface FormInterface {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -19,7 +20,7 @@ interface FormInterface {
   handleChange: (e: React.ChangeEvent<HTMLDivElement>) => void;
 }
 
-export const FormPanel = ({ props }: { props: FormInterface }) => {
+export const FormPanel = memo(({ props }: { props: FormInterface }) => {
   const {
     handleSubmit,
     receivedData,
@@ -55,7 +56,11 @@ export const FormPanel = ({ props }: { props: FormInterface }) => {
                   <Input
                     name={value}
                     value={text[value]}
-                    placeholder={`setup ${data.value} location`}
+                    placeholder={
+                      data.value === "horizontal"
+                        ? "select location from a to j"
+                        : "select location from 1 to 10"
+                    }
                     onChange={handleChange}
                   />
                 </InputSpacer>
@@ -63,8 +68,8 @@ export const FormPanel = ({ props }: { props: FormInterface }) => {
             </BoxSpacer>
           );
         })}
-        <FormButton type="submit" value="submit" />
+        <FormButton type="submit" value="submit" aria-label="cost-submit" />
       </Form>
     </FormDiv>
   );
-};
+});

@@ -25,6 +25,9 @@ export const GameOverSpacer = styled.div`
     font-weight: 700;
     outline: none;
     position: relative;
+    text-decoration: none;
+    list-style: none;
+    color: white;
     &:hover {
       color: @font-color;
       background: #fff;

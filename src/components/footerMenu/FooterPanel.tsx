@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import { Footer, ArrowCreator } from "../css/FooterMenu.style";
 
 const FooterPanel = (

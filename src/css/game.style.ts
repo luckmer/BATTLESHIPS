@@ -14,7 +14,7 @@ const board = keyframes`
   }
 
   50%{
-    transform: scale(1.6);
+    transform: scale(1.5);
     opacity:0;
   }
 
@@ -130,11 +130,10 @@ export const Ship = styled.div<Props>`
 export const ShipGrid = styled.div<any>`
   transform: rotate(${({ status }) => (status ? "90deg" : "0deg")});
   z-index: 999;
-  height: calc(
-    ${({ size, status }) => (status ? `2vmin * ${size}` : `4.6vmin`)}
-  );
+  height: calc(${({ size, status }) => (status ? `3vmin * ${size}` : `vmin`)});
 
-  margin: 40px 0 40px 0;
+  margin: 80px 0 80px 0;
+
   display: flex;
   align-items: center;
   justify-content: center;

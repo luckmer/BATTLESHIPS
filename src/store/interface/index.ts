@@ -52,6 +52,9 @@ type typesPayload = {
   [Types.Set_Ai_Destroyed_Boats]: { ai: arrInterface[] | undefined };
   [Types.Set_Selected_Boats]: { setBoats: droppedShipInterface };
   [Types.Set_Unclick_Boats]: { setBoats: [] };
+  [Types.Enemy_Sunk_Ship]: string;
+  [Types.Player_Sunk_Ship]: string;
+
   [Types.Set_Update_Curent_Move]: {
     updateCurrentMove: {
       name: shipInterface | string | any;
@@ -83,7 +86,8 @@ export type InitialStateType = {
       length: any;
     }[];
   };
-  boatHits: number[];
+  boatHits: string[];
+  playerBoatHits: string[];
 };
 
 interface arrInterface {

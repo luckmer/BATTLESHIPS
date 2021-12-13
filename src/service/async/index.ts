@@ -8,6 +8,7 @@ import {
   EnemyShipDestroyer,
   AiShipDestroyer
 } from "../../service/callback/index";
+
 import service from "../../service/gameService/Index";
 
 const AsyncComponet = (props: asyncInterface) => {
@@ -158,7 +159,6 @@ const AsyncComponet = (props: asyncInterface) => {
     const noMoves = boardData.filter((el) => el.attack !== true).length;
     if (noMoves <= 1) return;
     if (currentPlayer === "right") return;
-    setCurrentPlayer("right");
 
     AiShipDestroyer(boardData, setBoard, state, (callback) =>
       dispatch({
@@ -166,6 +166,7 @@ const AsyncComponet = (props: asyncInterface) => {
         payload: { ai: callback }
       })
     );
+    setCurrentPlayer("right");
   }, [boardData, setBoard, currentPlayer, state, dispatch, setCurrentPlayer]);
 };
 

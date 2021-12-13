@@ -6,8 +6,10 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 import { shipsPropsInterface } from "./interface";
 import { AppContext } from "../../store/store";
 import { ButtonPanel } from "../index";
+import { isEqual } from "lodash";
 
 import * as Dec from "../css/ships.style";
+import { memo } from "react";
 
 const Ships = ({ props }: { props: shipsPropsInterface }) => {
   const [openSideMenu, setOpenSideMenu] = useState(false);
@@ -42,7 +44,7 @@ const Ships = ({ props }: { props: shipsPropsInterface }) => {
           )}
         </div>
         <Dec.SideContainer>
-          <div>
+          <Dec.SideDivContainer>
             {shipData.map(({ id, size, name }: boardsInterface) => {
               const findShip = props.state.rotateShip.some(
                 (el: string) => el === name
@@ -79,7 +81,7 @@ const Ships = ({ props }: { props: shipsPropsInterface }) => {
                 </ShipGrid>
               );
             })}
-          </div>
+          </Dec.SideDivContainer>
         </Dec.SideContainer>
       </Dec.SideShipPanel>
       <Dec.Section gameOn={gameOn}>
@@ -92,4 +94,4 @@ const Ships = ({ props }: { props: shipsPropsInterface }) => {
   );
 };
 
-export default Ships;
+export default memo(Ships, isEqual);

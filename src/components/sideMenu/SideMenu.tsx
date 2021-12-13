@@ -1,4 +1,12 @@
-import { Fragment, useState, useContext, useEffect } from "react";
+import {
+  Fragment,
+  useState,
+  useContext,
+  useEffect,
+  memo,
+  useCallback,
+  useMemo
+} from "react";
 import { GameDiv, GameButton, Button } from "../../css/game.style";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { AppContext } from "../../store/store";
@@ -16,20 +24,26 @@ const SideMenu = () => {
     return { ...el, slice: ~~(i + 1) };
   });
 
-  const handleClick = () => !gameOn && setOpenSideMenu(!openSideMenu);
+  const handleClick = useCallback(() => {
+    !gameOn && setOpenSideMenu(!openSideMenu);
+  }, [gameOn, openSideMenu]);
 
-  const handleSetupOption = (slicer: number) => {
-    const selectedOption = droppedBoats.slice(0, slicer);
+  const handleSetupOption = useCallback(
+    (slicer: number) => {
+      const selectedOption = droppedBoats.slice(0, slicer);
 
-    dispatch({
-      type: Types.Set_Selected_Boats,
-      payload: { setBoats: selectedOption }
-    });
-  };
+      dispatch({
+        type: Types.Set_Selected_Boats,
+        payload: { setBoats: selectedOption }
+      });
+    },
+    [dispatch, droppedBoats]
+  );
 
-  const handleUnClickMove = () =>
+  const handleUnClickMove = useCallback(() => {
     selectedBoat.length &&
-    dispatch({ type: Types.Set_Selected_Boats, payload: { setBoats: [] } });
+      dispatch({ type: Types.Set_Selected_Boats, payload: { setBoats: [] } });
+  }, [dispatch, selectedBoat]);
 
   useEffect(
     () => setOpenSideMenu(() => (gameOn ? false : openSideMenu)),
@@ -37,6 +51,9 @@ const SideMenu = () => {
   );
 
   const moveMove = state.selectedShipOptions.setBoats;
+
+  const Memo = useMemo(() => droppedBoats, [droppedBoats]);
+
   return (
     <Fragment>
       <Side.SideMenuPanel open={openSideMenu} gameOn={gameOn}>
@@ -45,13 +62,13 @@ const SideMenu = () => {
             <h1>Moves</h1>
           </Side.Header>
           <GameDiv>
-            <GameButton onClick={handleClick}>
+            <GameButton onClick={() => handleClick()}>
               <Button>Close</Button>
             </GameButton>
           </GameDiv>
         </Side.SideButtons>
         <Side.DroppedShipContainer>
-          {droppedBoats.map((el, i) => (
+          {Memo.map((el, i) => (
             <Side.DroppedBox
               key={i}
               onClick={() => handleSetupOption(el.slice)}
@@ -84,4 +101,4 @@ const SideMenu = () => {
   );
 };
 
-export default SideMenu;
+export default memo(SideMenu);

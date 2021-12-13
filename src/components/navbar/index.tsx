@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { AiOutlineHome } from "react-icons/ai";
 import { Nav, Section, H1 } from "../css/navbar.style";
 
@@ -22,4 +23,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default memo(NavBar);

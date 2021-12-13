@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { mapInterface } from "../../service/boardCreator/interface";
 import { GameOverSpacer, Modal } from "../css/gameOver.style";
 import { shipInterface } from "../../service/ships/interface";
@@ -28,13 +29,13 @@ const GameOverPanel = (props: OverProps) => {
             You have sunk all ships with <br />
             <strong>accuracy {~~displayAccuracy}%</strong>
           </p>
-          <button>
-            <a href="/">Home</a>
-          </button>
+          <a href="/">
+            <button>HOME</button>
+          </a>
         </GameOverSpacer>
       </Modal>
     </Section>
   );
 };
 
-export default GameOverPanel;
+export default memo(GameOverPanel);

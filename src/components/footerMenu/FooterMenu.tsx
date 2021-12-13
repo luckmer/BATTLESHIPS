@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, memo } from "react";
 
 import { CheckInterface, TextInterface } from "./interface/TextInterface";
 import { shipsPropsInterface } from "../Ships/interface";
@@ -107,9 +107,6 @@ const FooterMenu = ({ props }: { props: shipsPropsInterface }) => {
 
     if (!ship) return;
 
-    // const rotateData = checkedCheckboxes.filter((el) => el.value === "rotate");
-
-    // const rotateStatus = rotateData.length ? true : false;
     const rotateShip = false ? [selectedShip] : [];
 
     const ID = findCorrectLocation.id;
@@ -248,4 +245,4 @@ const FooterMenu = ({ props }: { props: shipsPropsInterface }) => {
   );
 };
 
-export default FooterMenu;
+export default memo(FooterMenu);

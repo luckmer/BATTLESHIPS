@@ -21,5 +21,7 @@ export enum Types {
   Drag_off = "DRAG_OFF",
   Drag_on = "DRAG_ON",
   Off = "TURN_OFF",
-  On = "TURN_ON"
+  On = "TURN_ON",
+  Enemy_Sunk_Ship = "ENEMY_SUNK_SHIP",
+  Player_Sunk_Ship = "PLAYER_SUNK_SHIP"
 }

@@ -8,13 +8,13 @@ const GlobalStyle = createGlobalStyle`
 }
 
   body{
+    background-color:#f1efe9;
     user-select: none;
     -webkit-user-select: none; 
     -khtml-user-select: none;
     -moz-user-select: none; 
     -ms-user-select: none;
   }
-
 
 `;
 

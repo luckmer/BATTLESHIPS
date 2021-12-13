@@ -1,31 +1,25 @@
 import { arrInterface } from "../interface/arrInterface";
 
-class BoatDestructionDetection {
-  arrayUnique = (array: arrInterface[]) => {
-    let a = array.concat();
-    for (let i = 0; i < a.length; ++i) {
-      for (let j = i + 1; j < a.length; ++j) {
-        if (a[i].name === a[j].name) {
-          a.splice(j--, 1);
-        }
-      }
-    }
+const ObjData = (ai: arrInterface[] | undefined) => {
+  const shipName = ai?.map((el) => el.name).filter((el) => el !== "enemy");
 
-    return a;
+  const obj: {
+    [key: string]: number;
+  } = {};
+
+  shipName?.forEach((el) => (obj[el] = (obj[el] | 0) + 1));
+
+  const lives: {
+    [key: string]: number;
+  } = {
+    Aircraft: 5,
+    Carrier: 5,
+    Battleship: 4,
+    Cruiser: 3,
+    Submarine: 3
   };
 
-  generateChecker = (ships: arrInterface[] | undefined) => {
-    if (!ships?.length) return;
+  return { obj, lives };
+};
 
-    const deletedDuplicates = this.arrayUnique(ships);
-
-    const collectedBoats = deletedDuplicates.filter(
-      (el) => el.attacked.length === el.size
-    );
-
-    return collectedBoats;
-  };
-}
-const boatDestructionDetection = new BoatDestructionDetection();
-
-export default boatDestructionDetection;
+export default ObjData;

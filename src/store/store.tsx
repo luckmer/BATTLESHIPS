@@ -1,7 +1,8 @@
 import React, { createContext, useReducer, Dispatch } from "react";
 
 import { InitialStateType, actionsPayload } from "./interface";
-import { setupBoatHit } from "./reducers/attacks.reducer";
+import { setupBoatHit, setupPlayerBoatShip } from "./reducers/attacks.reducer";
+
 import {
   setUserDroppedShips,
   setupSelectedOptions,
@@ -31,7 +32,8 @@ const initialState = {
   droppedPlayerShips: [],
   selectedShipOptions: { setBoats: [], updateCurrentMove: [] },
   gameStatus: false,
-  boatHits: []
+  boatHits: [],
+  playerBoatHits: []
 };
 
 const AppContext = createContext<{
@@ -54,7 +56,8 @@ const reducer = (state: InitialStateType, action: any) => ({
   uniqueShipKey: shipKey(state, action),
   dragged: draggedPanel(state, action),
   gameStatus: setGameOn(state, action),
-  boatHits: setupBoatHit(state, action)
+  boatHits: setupBoatHit(state, action),
+  playerBoatHits: setupPlayerBoatShip(state, action)
 });
 
 const AppProvider: React.FC = ({ children }) => {
