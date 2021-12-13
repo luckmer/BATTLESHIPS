@@ -204,6 +204,25 @@ export const Grid = styled.div<any>`
   justify-content: center;
   align-items: center;
 
+  &:before {
+    content: ${({ location, placer, opponent, boat, attack }) =>
+      attack
+        ? ""
+        : boat
+        ? opponent === "enemy"
+          ? `"${placer}${location}"`
+          : ``
+        : attack
+        ? ""
+        : `"${placer}${location}"`};
+
+    z-index: 2;
+    position: absolute;
+    color: #f1efe9;
+    font-size: 1.5vmin;
+    font-family: "Shippori Antique", sans-serif;
+  }
+
   border: ${({ boat, status }) =>
     boat && status === "player" ? "none" : " 1px solid hsla(0, 0%, 100%, 0.2)"};
 

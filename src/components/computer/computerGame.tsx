@@ -23,8 +23,12 @@ const ComputerGame = (props: propsInterface) => {
           used,
           attack,
           opponent,
-          name
+          name,
+          placer,
+          location
         }: {
+          placer: string;
+          location: number;
           attack: boolean;
           id: number;
           used: boolean;
@@ -35,6 +39,8 @@ const ComputerGame = (props: propsInterface) => {
 
           return (
             <Grid
+              placer={placer}
+              location={location}
               key={id}
               boat={used}
               opponent={opponent}

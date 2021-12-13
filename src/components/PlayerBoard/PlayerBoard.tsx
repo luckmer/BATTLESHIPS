@@ -25,8 +25,12 @@ const PlayerBoard = (props: PlayerBoardProps) => {
             used,
             attack,
             name,
-            rotated
+            rotated,
+            placer,
+            location
           }: {
+            placer: string;
+            location: number;
             attack: boolean;
             name?: string;
             id: number;
@@ -41,6 +45,8 @@ const PlayerBoard = (props: PlayerBoardProps) => {
 
           return (
             <Grid
+              placer={placer}
+              location={location}
               rotated={rotated}
               id={String(i + 1)}
               key={id}
