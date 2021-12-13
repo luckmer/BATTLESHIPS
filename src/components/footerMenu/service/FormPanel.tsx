@@ -9,7 +9,6 @@ import {
   Input,
   FormButton
 } from "../../css/FooterMenu.style";
-import { memo } from "react";
 
 interface FormInterface {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -20,7 +19,7 @@ interface FormInterface {
   handleChange: (e: React.ChangeEvent<HTMLDivElement>) => void;
 }
 
-export const FormPanel = memo(({ props }: { props: FormInterface }) => {
+export const FormPanel = ({ props }: { props: FormInterface }) => {
   const {
     handleSubmit,
     receivedData,
@@ -72,4 +71,4 @@ export const FormPanel = memo(({ props }: { props: FormInterface }) => {
       </Form>
     </FormDiv>
   );
-});
+};

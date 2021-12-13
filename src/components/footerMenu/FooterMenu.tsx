@@ -55,6 +55,7 @@ const FooterMenu = ({ props }: { props: shipsPropsInterface }) => {
     const isChecked = checkedCheckboxes.some(
       ({ value }: { value: string }) => value === data.value
     );
+
     if (isChecked) {
       setCheckedCheckboxes(
         checkedCheckboxes.filter(
@@ -66,6 +67,7 @@ const FooterMenu = ({ props }: { props: shipsPropsInterface }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const { shipPanel, ShipCollisionBlocker, BlockShip } = shipFunctions;
 
     const correctAlphabet = new Array(10)
@@ -74,7 +76,8 @@ const FooterMenu = ({ props }: { props: shipsPropsInterface }) => {
 
     const correctNumbers = new Array(10).fill(1).map((_, i) => i + 1);
 
-    const horizontal = text.horizontal;
+    const horizontal = text.horizontal.toLowerCase();
+
     const vertical = Number(text.vertical);
 
     if (
@@ -107,11 +110,15 @@ const FooterMenu = ({ props }: { props: shipsPropsInterface }) => {
 
     if (!ship) return;
 
-    const rotateShip = false ? [selectedShip] : [];
+    const rotateData = checkedCheckboxes.filter((el) => el.value === "rotate");
+
+    const rotateStatus = rotateData.length ? true : false;
+
+    const rotateShip = rotateStatus ? [selectedShip] : [];
 
     const ID = findCorrectLocation.id;
 
-    const shipLocation = shipPanel(ship, 1, ID, rotateShip, false);
+    const shipLocation = shipPanel(ship, 1, ID, rotateShip, rotateStatus);
 
     const shipBlocker = BlockShip(shipLocation, boardData);
 
@@ -127,7 +134,12 @@ const FooterMenu = ({ props }: { props: shipsPropsInterface }) => {
 
     if (!shipBlocker) return;
 
-    const update = service.Response(boardData, shipLocation, ship);
+    const update = service.Response(
+      boardData,
+      shipLocation,
+      ship,
+      rotateStatus
+    );
 
     setBoard(update);
 

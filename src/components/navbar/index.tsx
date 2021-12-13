@@ -7,7 +7,7 @@ const NavBar = () => {
     <Nav>
       <Section>
         <div>
-          <a href="/game" aria-label="battle">
+          <a href="/" aria-label="battle">
             <H1>BATTLESHIP</H1>
           </a>
         </div>
