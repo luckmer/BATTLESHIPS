@@ -42,7 +42,7 @@ function FooterAttack({
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      const horizontal = text.horizontal;
+      const horizontal = text.horizontal.toLowerCase();
       const vertical = Number(text.vertical);
       const correctAlphabet = new Array(10)
         .fill(1)
