@@ -6,7 +6,7 @@ import { AppContext } from "../../store/store";
 import { Types } from "../../store/types";
 import ObjData from "./service/index";
 
-const boardMoved = (original: any, updated: any) =>
+const boardMoved = (original: string[], updated: string[]) =>
   JSON.stringify(updated) !== JSON.stringify(original);
 
 const NoteInformation = (props: PropsInterface) => {

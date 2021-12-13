@@ -17,7 +17,7 @@ const PlayerBoard = (props: PlayerBoardProps) => {
   const [idsStart, idsEnd] = BoatEndStartGenerator(state);
 
   return (
-    <Div>
+    <Div aria-label="main_container">
       {boardData.map(
         (
           {
