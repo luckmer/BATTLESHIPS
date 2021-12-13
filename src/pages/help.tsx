@@ -38,6 +38,10 @@ const Help = () => {
           </P>
           <Small aria-label="pc_attack">player Attack</Small>
           <P>to make an attack on an enemy, click on the enemy's board</P>
+          <Small aria-label="pc_attack">player rotate</Small>
+          <P>
+            to rotate boats select the boat of your choice and press R to rotate
+          </P>
         </PcDescriptionPanel>
       </PCContainer>
 
