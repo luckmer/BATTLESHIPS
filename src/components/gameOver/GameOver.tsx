@@ -24,13 +24,13 @@ const GameOverPanel = (props: OverProps) => {
     <Section>
       <Modal>
         <GameOverSpacer>
-          <h1>Game Over</h1>
+          <h1 aria-label="header">Game Over</h1>
           <p>
             You have sunk all ships with <br />
             <strong>accuracy {~~displayAccuracy}%</strong>
           </p>
           <a href="/">
-            <button>HOME</button>
+            <button aria-label="home">HOME</button>
           </a>
         </GameOverSpacer>
       </Modal>
