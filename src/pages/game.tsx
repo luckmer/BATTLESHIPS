@@ -31,7 +31,6 @@ const FooterAttack = React.lazy(
 const FooterHistory = React.lazy(
   () => import("../components/footerMenu/FooterHistory")
 );
-
 const PlayerBoard = React.lazy(
   () => import("../components/PlayerBoard/PlayerBoard")
 );
