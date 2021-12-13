@@ -9,7 +9,6 @@ import React, {
 
 import { DragAndDropShip, PlayerDragAndDrop } from "../service/dragAndDrop";
 import { Section, Rotate, FooterSlicer } from "../css/game.style";
-import { FooterHistory } from "../components/index";
 import { AppContext } from "../store/store";
 import { Types } from "../store/types";
 
@@ -18,17 +17,21 @@ import GenerateBoard from "../service/boardCreator/board";
 import ShipPanel from "../service/ships/shipPanel";
 import Enemy from "../service/ai/EnemyCreator";
 import AsyncComponet from "../service/async";
-
-import {
-  GameOverPanel,
-  FooterMenu,
-  FooterAttack,
-  Ships
-} from "../components/index";
-
 import { isEqual } from "lodash";
+import { GameOverPanel } from "../components/index";
 
+const Ships = React.lazy(() => import("../components/Ships/Ships"));
 const SideMenu = React.lazy(() => import("../components/sideMenu/SideMenu"));
+const FooterMenu = React.lazy(
+  () => import("../components/footerMenu/FooterMenu")
+);
+const FooterAttack = React.lazy(
+  () => import("../components/footerMenu/FooterAttack")
+);
+const FooterHistory = React.lazy(
+  () => import("../components/footerMenu/FooterHistory")
+);
+
 const PlayerBoard = React.lazy(
   () => import("../components/PlayerBoard/PlayerBoard")
 );
@@ -115,14 +118,19 @@ const Game = () => {
     <GameOverPanel shipsData={shipsData} enemyBoardData={enemyBoardData} />
   ) : (
     <Fragment>
-      <Suspense fallback={<div>loading side menu ....</div>}>
+      <Suspense fallback={<div>loading side menu...</div>}>
         <SideMenu />
       </Suspense>
-      <FooterSlicer>
-        <FooterMenu props={ShipsProps} />
-        <FooterHistory props={ShipsProps} />
-        <FooterAttack props={ShipsProps} handleShipAttack={handleShipAttack} />
-      </FooterSlicer>
+      <Suspense fallback={<div>loading footer menu...</div>}>
+        <FooterSlicer>
+          <FooterMenu props={ShipsProps} />
+          <FooterHistory props={ShipsProps} />
+          <FooterAttack
+            props={ShipsProps}
+            handleShipAttack={handleShipAttack}
+          />
+        </FooterSlicer>
+      </Suspense>
       <Section>
         <Rotate>
           <Suspense fallback={<div>loading boards...</div>}>
@@ -138,7 +146,9 @@ const Game = () => {
             />
           </Suspense>
         </Rotate>
-        <Ships props={ShipsProps} />
+        <Suspense fallback={<div>loading ships...</div>}>
+          <Ships props={ShipsProps} />
+        </Suspense>
       </Section>
     </Fragment>
   );
