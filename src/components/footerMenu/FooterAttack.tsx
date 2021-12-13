@@ -23,6 +23,7 @@ function FooterAttack({
   const [checkedCheckboxes, setCheckedCheckboxes] = useState<CheckInterface[]>(
     []
   );
+
   const [text, setText] = useState<TextInterface>({
     vertical: "",
     horizontal: ""
