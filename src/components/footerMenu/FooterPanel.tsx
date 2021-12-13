@@ -11,6 +11,7 @@ const FooterPanel = (
 
   return (
     <Footer
+      role="button"
       onClick={handleTouchStart}
       openSiteMenu={openSiteMenu}
       height={height}
