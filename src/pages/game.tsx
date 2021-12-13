@@ -1,13 +1,19 @@
-import { useState, useContext, Fragment, memo, useCallback } from "react";
+import React, {
+  useState,
+  useContext,
+  Fragment,
+  memo,
+  useCallback,
+  Suspense
+} from "react";
 
 import { DragAndDropShip, PlayerDragAndDrop } from "../service/dragAndDrop";
 import { Section, Rotate, FooterSlicer } from "../css/game.style";
-import { FooterHistory, SideMenu } from "../components/index";
+import { FooterHistory } from "../components/index";
 import { AppContext } from "../store/store";
 import { Types } from "../store/types";
 
 import GenerateEnemyBoard from "../service/boardCreator/enemyBoard";
-import ComputerGame from "../components/computer/computerGame";
 import GenerateBoard from "../service/boardCreator/board";
 import ShipPanel from "../service/ships/shipPanel";
 import Enemy from "../service/ai/EnemyCreator";
@@ -15,12 +21,20 @@ import AsyncComponet from "../service/async";
 
 import {
   GameOverPanel,
-  PlayerBoard,
   FooterMenu,
   FooterAttack,
   Ships
 } from "../components/index";
+
 import { isEqual } from "lodash";
+
+const SideMenu = React.lazy(() => import("../components/sideMenu/SideMenu"));
+const PlayerBoard = React.lazy(
+  () => import("../components/PlayerBoard/PlayerBoard")
+);
+const ComputerGame = React.lazy(
+  () => import("../components/computer/computerGame")
+);
 
 const Game = () => {
   const [currentPlayer, setCurrentPlayer] = useState("right");
@@ -101,7 +115,9 @@ const Game = () => {
     <GameOverPanel shipsData={shipsData} enemyBoardData={enemyBoardData} />
   ) : (
     <Fragment>
-      <SideMenu />
+      <Suspense fallback={<div>loading side menu ....</div>}>
+        <SideMenu />
+      </Suspense>
       <FooterSlicer>
         <FooterMenu props={ShipsProps} />
         <FooterHistory props={ShipsProps} />
@@ -109,16 +125,18 @@ const Game = () => {
       </FooterSlicer>
       <Section>
         <Rotate>
-          <PlayerBoard
-            state={state}
-            boardData={boardData}
-            handleDragOver={handleDragOver}
-            handleDropPlayer={handleDropPlayer}
-          />
-          <ComputerGame
-            shipData={enemyBoardData}
-            handleShipAttack={handleShipAttack}
-          />
+          <Suspense fallback={<div>loading boards...</div>}>
+            <PlayerBoard
+              state={state}
+              boardData={boardData}
+              handleDragOver={handleDragOver}
+              handleDropPlayer={handleDropPlayer}
+            />
+            <ComputerGame
+              shipData={enemyBoardData}
+              handleShipAttack={handleShipAttack}
+            />
+          </Suspense>
         </Rotate>
         <Ships props={ShipsProps} />
       </Section>
