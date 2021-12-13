@@ -143,7 +143,7 @@ export const Div = styled.div`
   margin: 2vmin;
   display: grid;
   background-color: hsl(200, 100%, 50%);
-  border: 20px outset #4c527d;
+  border: 20px outset #007ebd;
 
   grid-template-rows: repeat(10, 4.6vmin);
   grid-template-columns: repeat(10, 4.6vmin);
